@@ -1,5 +1,146 @@
-[surprised] Ohhh, have a look at that! [excited] Absolutely hammered down!
+## no-players
 
-[excited] Up and down! [emphasis] There is no answer to that one.
+# 1. Funny / Big Smash
+[chuckle] Whoa! That shuttle looked like it had somewhere very important to be!
+[excited] What a smash! Huge power, absolutely hammered down,
+[surprised] and there was barely any time to react!
+[laughs] That point ended very quickly.
+[emphasis] Blink once and you've missed it. [pause]
+[confident] That wasn't just an attack... that was a warning!
 
+# 2. Serious / Powerful
+[impressed] Oh, that's a big smash!
+[serious] Clean contact, plenty of power, and hit right at the perfect moment.
+[emphasis] The shuttle came down fast... really fast.
+[pause] There wasn't much time to get a racket behind that one.
+[confident] Strong attack, strong finish,
+[impressed] and a very good way to close the rally.
+
+# 3. Funny / Quick Finish
+[surprised] Ooh! Well... that didn't take long!
+[excited] One big swing and the shuttle was straight down.
+[chuckle] By the time you worked out what was happening, the rally was already over!
+[emphasis] That's some serious pace. [pause]
+[laughs] Pick up the shuttle...
+[playful] and let's try that again!
+
+# 4. Appreciative / Smooth
+[softly] Ooh... that was nice.
+[impressed] Great timing, clean contact, and the smash came at exactly the right moment.
+[emphasis] No need to force it.
+[pause] The opening was there... and it was taken.
+[warm] Simple, smooth,
+[admiring] and very nicely finished.
+
+# 5. Big Energy
+[excited] Ohhh! What a hit!
+[emphasis] That was absolutely hammered down!
+[surprised] The shuttle came back over the net and... bang!
+[chuckle] Not much time to think about defending that one.
+[pause] Plenty of power, plenty of confidence,
+[excited] and that's a massive finish!
+
+# 6. Dry Funny
+[chuckle] Well... I don't think the shuttle enjoyed that very much.
+[excited] A huge smash, straight down with some serious power!
+[amused] It spent more time travelling down than it did going forward.
+[pause] Very little chance to respond there.
+[emphasis] Hard, quick, direct...
+[laughs] and job done!
+
+# 7. Calm / Serious
+[focused] That's a really good attacking shot.
+[emphasis] The timing was right, the contact was clean, and the power followed naturally.
+[impressed] Nothing complicated about it.
+[pause] Wait for the opportunity...
+[confident] attack the opening...
+[serious] and finish the rally.
+
+# 8. Playful
+[surprised] Whoa! Where did that come from?
+[excited] The rally was moving along nicely and suddenly... smash!
 [chuckle] That shuttle went down in a serious hurry.
+[emphasis] There wasn't much warning.
+[pause] One moment you're defending...
+[laughs] the next moment you're picking the shuttle up!
+
+# 9. Aww / Nice Finish
+[warm] Ahh, that's a lovely finish.
+[impressed] The rally was built nicely and the opening finally appeared.
+[softly] Then came the smash... clean, controlled, and right on time.
+[pause] Plenty of power without trying to do too much.
+[admiring] That's nice badminton.
+[softly] Really nice.
+
+# 10. Replay / Big Moment
+[excited] Oh, we've got to see that one again!
+[emphasis] Look at the power behind this smash.
+[surprised] The shuttle is up... and suddenly it's straight down!
+[chuckle] Almost no time to react.
+[pause] Watch it one more time...
+[impressed] clean contact, sharp finish,
+[confident] and that's how you end a rally.
+
+## with-players
+
+# 1. Funny / Casual
+[surprised] Ohhh! What a smash from {player}!
+[chuckle] That shuttle was not hanging around for long.
+[excited] Straight down with some serious power, and that was the rally done.
+[pause] [amused] Quick, clean... and very rude to the shuttle.
+
+# 2. Aww / Appreciative
+[warm] Ahh, that was lovely from {player}.
+[impressed] Waited for the right moment, got into position, and finished it beautifully.
+[softly] Nothing rushed, nothing forced.
+[pause] [admiring] Just a really nice smash.
+
+# 3. Big Energy
+[excited] Ohhh, {player}! What a hit!
+[emphasis] That was absolutely hammered down!
+[surprised] Hardly any time to react once that shuttle started coming down.
+[pause] [excited] That's a huge finish from {player}!
+
+# 4. Dry Humour
+[chuckle] Well... {player} clearly wasn't interested in a long rally there.
+[excited] One opening, one big swing, and down goes the shuttle.
+[amused] Efficient, I suppose!
+[pause] [impressed] Very nicely done.
+
+# 5. Serious / Broadcast
+[focused] Excellent attacking play from {player}.
+[emphasis] Good preparation, clean contact, and plenty of pace through the smash.
+[pause] [confident] Once the opening appeared, there was no hesitation.
+[impressed] A very strong finish to the point.
+
+# 6. Surprised / Natural
+[surprised] Whoa, where did that come from?!
+[excited] {player} suddenly stepped in and absolutely launched into that smash.
+[chuckle] It all happened very quickly.
+[pause] [impressed] That's definitely one worth seeing again.
+
+# 7. Playful
+[excited] There goes {player}!
+[emphasis] Up goes the shuttle... and bang!
+[chuckle] That one came down in a hurry.
+[pause] [playful] Not much discussion needed after that.
+[impressed] That's a proper finish.
+
+# 8. Calm / Smooth
+[impressed] Really composed from {player}.
+[softly] The rally was building, the opening appeared, and the attack came at exactly the right time.
+[emphasis] Clean contact, good angle, plenty of control.
+[pause] [warm] Very smooth badminton.
+
+# 9. Little Aussie Touch
+[excited] Ohhh, what a smash from {player}!
+[surprised] Plenty behind that one!
+[chuckle] Not much time to get ready for it either.
+[pause] [impressed] That's a beauty from {player}.
+[emphasis] How good was that!
+
+# 10. Highlight / Replay Feel
+[excited] Have another look at this from {player}.
+[emphasis] The opening is there... the attack comes straight away... and the shuttle is hammered down.
+[surprised] Very little reaction time on the other side.
+[pause] [impressed] Brilliant timing from {player}, and a great way to finish the rally.

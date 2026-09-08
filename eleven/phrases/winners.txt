@@ -1,5 +1,31 @@
-[excited] That's the match! [impressed] And deservedly so.
+# Winner Announcement
 
-[excited] Game, set, and match! [chuckle] What a way to finish.
+# 1. Clean Broadcast
+[confident] And that’s the match. [emphasis] {winner} gets the win over {opponent}. [pause] [warm] A strong finish, and a well-earned result.
 
-[impressed] A composed performance from start to finish.
+# 2. Energetic
+[excited] That’s it! [emphasis] {winner} comes through against {opponent} and takes the match. [pause] [impressed] A really solid performance from start to finish.
+
+# 3. Respectful
+[warm] A good contest between the two, but in the end it’s {winner} who gets past {opponent}. [pause] [confident] A deserved win after a hard-fought match.
+
+# 4. Short and Natural
+[impressed] Job done for {winner}. [emphasis] {opponent} made it difficult, but {winner} found a way through. [pause] [warm] That’s the match.
+
+# 5. Competitive Feel
+[focused] {opponent} pushed hard right to the end, but {winner} held on and closes out the match. [pause] [confident] A very good win.
+
+# 6. Slightly Emotional
+[warm] You can see what that one means. [emphasis] {winner} takes the victory over {opponent} after a real battle. [pause] [impressed] Plenty of effort from both sides.
+
+# 7. Strong Finish
+[excited] A strong finish from {winner}! [emphasis] {opponent} stayed in the fight, but the final word belongs to {winner}. [pause] [confident] Match won.
+
+# 8. Casual Human
+[chuckle] Well, that was a proper contest. [emphasis] {winner} comes out on top against {opponent}. [pause] [warm] A good match, and a good win.
+
+# 9. Premium Broadcast
+[confident] The match comes to an end with {winner} taking the victory over {opponent}. [pause] [impressed] Both had their moments, but {winner} handled the closing stages better.
+
+# 10. Highlight Style
+[excited] And there it is! [emphasis] {winner} gets over the line against {opponent}. [pause] [warm] A strong performance, a tough opponent, and a result to be proud of.

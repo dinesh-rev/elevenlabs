@@ -13,19 +13,28 @@ elevenlabs = ElevenLabs(
 )
 
 # Phrases live in phrases/<category>.txt - one phrase per block, blank line
-# between blocks, "#" lines are labels and are ignored.
-def load_phrases(category):
+# between blocks, "#" lines are labels and are ignored. A "## <name>" line
+# starts a section; pass section= to load only that part of the file, e.g.
+# smash.txt has "no-players" and "with-players".
+def load_phrases(category, section=None):
     text = open(f"phrases/{category}.txt", encoding="utf-8").read()
     blocks = []
+    current = None
     for block in text.split("\n\n"):
-        lines = [l for l in block.strip().split("\n") if not l.startswith("#")]
-        if lines:
+        lines = []
+        for l in block.strip().split("\n"):
+            if l.startswith("##"):
+                current = l.lstrip("#").strip()
+            elif not l.startswith("#"):
+                lines.append(l)
+        if lines and (section is None or current == section):
             blocks.append("\n".join(lines))
     return blocks
 
 
 CATEGORY = "smash"  # match_start, rally, smash, highlights, winners, convo
-text = random.choice(load_phrases(CATEGORY))
+SECTION = None  # for smash: "no-players" or "with-players"
+text = random.choice(load_phrases(CATEGORY, SECTION))
 print(f"[{CATEGORY}] {text}")
 
 output_path = f"output_{CATEGORY}.mp3"

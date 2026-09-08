@@ -3,3 +3,18 @@
 [calm] Both players looking focused as this one begins.
 
 [excited] And we're off! This should be a good one.
+
+# 1. Clean Broadcast
+[welcoming] We’re ready for another match here today. [emphasis] {player1} of {country1} takes on {player2} of {country2} on Court {court_no}. [pause] [confident] This is match number {match_no} of the day... and we’re all set to get underway.
+
+# 2. More Energetic
+[excited] Here we go! [emphasis] On Court {court_no}, {player1}, representing {country1}, faces {player2} from {country2}. [pause] [welcoming] It’s match number {match_no} on today’s schedule, and both players are ready to go.
+
+# 3. Natural / Human
+[warm] Next up on Court {court_no}, we’ve got {player1} from {country1} up against {player2} of {country2}. [pause] [lightly] This will be match number {match_no} of the day... [confident] and now it’s their turn on court.
+
+# 4. Face-Off Style
+[focused] Time for the next face-off on Court {court_no}. [emphasis] {player1} of {country1} on one side, {player2} from {country2} on the other. [pause] [excited] Match number {match_no} of the day is ready to begin.
+
+# 5. Premium / Broadcast Feel
+[welcoming] We’re heading over to Court {court_no} for the next match. [emphasis] Representing {country1}, we have {player1}... and across the court, {player2} from {country2}. [pause] [confident] This is match number {match_no} of the day. [excited] Let’s get into it.
