@@ -4,7 +4,9 @@ from elevenlabs.types import VoiceSettings
 from elevenlabs.core.api_error import ApiError
 import os
 import random
+import re
 import sys
+import time
 from pathlib import Path
 
 # Anchor everything to this file's folder so the script works from any cwd.
@@ -39,9 +41,92 @@ def load_phrases(category, section=None):
     return blocks
 
 
+# ---------------------------------------------------------------------------
+# Live match variables. These start empty and are refilled by live.py every
+# time the websocket reports a change on the court we are following.
+# ---------------------------------------------------------------------------
+COURT = "0"        # court to follow; "" follows whichever court reports first
+PLAYER1 = ""
+PLAYER2 = ""
+COUNTRY1 = ""
+COUNTRY2 = ""
+SCORE1 = 0
+SCORE2 = 0
+ROUND = ""
+STATUS = ""
+
+LIVE = True        # False = ignore the socket and use generic phrases
+
+
+def update(record):
+    """Copy one court record from the socket into the variables above."""
+    global PLAYER1, PLAYER2, COUNTRY1, COUNTRY2, SCORE1, SCORE2, ROUND, STATUS
+    if COURT and record["court"] and record["court"] != COURT:
+        return  # another court on the same feed
+    PLAYER1, COUNTRY1 = record["player1"], record["country1"]
+    PLAYER2, COUNTRY2 = record["player2"], record["country2"]
+    SCORE1, SCORE2 = record["score1"], record["score2"]
+    ROUND, STATUS = record["round"], record["status"]
+
+
+def connect(timeout=30):
+    """Start the listener and wait for the first match. True if names arrived."""
+    import live
+    live.start(on_change=update)
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        if PLAYER1 and PLAYER2:
+            return True
+        time.sleep(0.5)
+    return False
+
+
+def fill(text):
+    """Substitute {player}, {winner}, {opponent}, {country}, {court}."""
+    # whoever is ahead is the winner; at match end that is the actual result
+    winner, opponent = ((PLAYER1, PLAYER2) if SCORE1 >= SCORE2
+                        else (PLAYER2, PLAYER1))
+    for key, value in {"player": PLAYER1, "winner": winner, "opponent": opponent,
+                       "country": COUNTRY1, "court": COURT}.items():
+        if value:
+            text = text.replace("{%s}" % key, str(value))
+    # "Lee C.W." + "." reads as a stumble; leave deliberate "..." pauses alone
+    return re.sub(r"\.\.(?!\.)", ".", text)
+
+
+def pick(category, section=None):
+    """A phrase with every placeholder filled, or None if names are missing."""
+    blocks = load_phrases(category, section)
+    random.shuffle(blocks)
+    for block in blocks:
+        filled = fill(block)
+        if not re.search(r"\{\w+\}", filled):
+            return filled
+    return None
+
+
 CATEGORY = "winners"  # match_start, rally, smash, highlights, winners, convo
 SECTION = None  # for smash: "no-players" or "with-players"
-text = random.choice(load_phrases(CATEGORY, SECTION))
+
+if LIVE:
+    if connect():
+        print(f"court {COURT}: {PLAYER1} ({COUNTRY1}) {SCORE1}"
+              f" - {SCORE2} {PLAYER2} ({COUNTRY2}) [{ROUND} {STATUS}]")
+    else:
+        print("no live match data; falling back to generic phrases",
+              file=sys.stderr)
+
+if CATEGORY == "smash" and SECTION is None:
+    SECTION = "with-players" if PLAYER1 else "no-players"
+
+text = pick(CATEGORY, SECTION)
+if text is None:
+    # every phrase in this category needs a name we do not have
+    text = pick(CATEGORY, "no-players") if CATEGORY == "smash" else None
+if text is None:
+    print(f"No usable {CATEGORY} phrase without player names.", file=sys.stderr)
+    sys.exit(1)
+
 print(f"[{CATEGORY}] {text}")
 
 output_path = BASE_DIR / f"output_{CATEGORY}.mp3"

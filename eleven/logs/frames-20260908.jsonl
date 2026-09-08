@@ -1,0 +1,4 @@
+{"t": "2026-09-08T16:09:25.208212+00:00", "raw": "{\"type\":\"EXT_SUBSCRIBE_ACK\",\"subscribed\":[\"EXT#TOUR#76e14a9b-6e88-49f4-b0c0-f04d5b910abf\"],\"tournamentId\":\"76e14a9b-6e88-49f4-b0c0-f04d5b910abf\"}"}
+{"type":"EXT_SUBSCRIBE_ACK","subscribed":["EXT#TOUR#76e14a9b-6e88-49f4-b0c0-f04d5b910abf"],"tournamentId":"76e14a9b-6e88-49f4-b0c0-f04d5b910abf"}
+{"type":"EXT_SUBSCRIBE_ACK","subscribed":["EXT#TOUR#76e14a9b-6e88-49f4-b0c0-f04d5b910abf"],"tournamentId":"76e14a9b-6e88-49f4-b0c0-f04d5b910abf"}
+{"type":"EXT_SUBSCRIBE_ACK","subscribed":["EXT#TOUR#76e14a9b-6e88-49f4-b0c0-f04d5b910abf"],"tournamentId":"76e14a9b-6e88-49f4-b0c0-f04d5b910abf"}
