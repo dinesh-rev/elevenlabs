@@ -1,0 +1,138 @@
+# 1. Balanced Highlight
+[excited] What a match that was!
+[impressed] We had long rallies, some huge smashes, and plenty of great defensive work.
+[emphasis] Every time it looked like a point was over, the shuttle seemed to come back again.
+[warm] And you could see from the reactions just how much some of those rallies meant.
+[pause] [confident] Plenty to enjoy in this one.
+
+# 2. High Energy
+[excited] That match had a little bit of everything!
+[surprised] Fast exchanges, big smashes, diving saves, and rallies that just refused to end.
+[chuckle] At times, even the shuttle looked tired.
+[emphasis] The pressure kept building right through the match.
+[pause] [impressed] Definitely one worth watching back.
+
+# 3. Appreciative
+[warm] That was a really enjoyable match to watch.
+[impressed] There were some beautifully constructed rallies, followed by some very powerful finishes.
+[softly] The defence was just as impressive as the attack at times.
+[emphasis] And when the important points arrived, both sides kept finding another level.
+[pause] [admiring] Lovely badminton.
+
+# 4. Funny
+[chuckle] Well, nobody was interested in making life easy out there.
+[excited] The rallies kept going, the smashes kept coming, and somehow the shuttle kept finding its way back over the net.
+[amused] There was plenty of running involved too... probably more than anyone planned for.
+[emphasis] A lot of effort, a lot of pressure, and some brilliant finishes.
+[pause] [impressed] Good fun that one.
+
+# 5. Serious Broadcast
+[focused] A very competitive match from start to finish.
+[emphasis] We saw good attacking badminton, disciplined defence, and several extended rallies.
+[impressed] The quality stayed high even when the pressure increased.
+[pause] The important moments were decided by small margins.
+[confident] A strong performance on both sides of the court.
+
+# 6. Rally Focus
+[excited] Some fantastic rallies in this match.
+[surprised] The shuttle went corner to corner, back to front, and somehow kept coming back.
+[emphasis] Defence turned into attack in a matter of seconds.
+[chuckle] Just when you thought the rally was finished... apparently not.
+[pause] [impressed] Some brilliant exchanges.
+
+# 7. Smash Focus
+[excited] There was certainly no shortage of power in this match!
+[emphasis] We saw some huge smashes, but they usually came after some really patient build-up.
+[impressed] The openings had to be created before the big finishes arrived.
+[chuckle] And when they did arrive, they arrived quickly.
+[pause] [confident] Plenty of attacking badminton to enjoy.
+
+# 8. Defence Focus
+[surprised] Some of the defence in this match was outstanding.
+[excited] Shots that looked like certain winners somehow kept coming back.
+[emphasis] That forced the rallies to go longer and made the eventual winning shots even better.
+[warm] You could see the effort in the reactions after some of those points.
+[pause] [impressed] Great determination throughout.
+
+# 9. Emotion Focus
+[warm] You could really see what this match meant from the reactions on court.
+[excited] Big celebrations after the important points, and a little frustration when opportunities slipped away.
+[emphasis] That emotion only increased as the rallies became more competitive.
+[impressed] Add in some great attacking play and strong defence...
+[pause] and you had a very entertaining contest.
+
+# 10. Casual Human
+[chuckle] That was a busy match.
+[excited] Plenty of smashes, plenty of scrambling, and more than a few rallies where nobody seemed willing to give up.
+[amused] Sometimes the simplest way to describe it is... they just kept getting the shuttle back.
+[emphasis] Eventually though, somebody had to find the finish.
+[pause] [impressed] Good match.
+
+# 11. Pressure / Big Moments
+[focused] This match really came alive in the pressure moments.
+[emphasis] The rallies became longer, the attacks became more aggressive, and every mistake started to matter a little more.
+[excited] We saw some excellent smashes and some equally good defensive replies.
+[pause] [impressed] And when the final shots came, they had to be earned.
+[confident] A very competitive contest.
+
+# 12. Momentum
+[excited] The momentum moved back and forth throughout this match.
+[impressed] One strong rally would change the feeling, then a big smash or an excellent defensive save would shift it again.
+[emphasis] Neither side was able to relax for very long.
+[warm] That made every important point feel just a little bigger.
+[pause] [confident] Really entertaining badminton.
+
+# 13. Long Rally Style
+[surprised] Some of those rallies just kept going and going.
+[excited] Attack, defence, recovery, another attack... and still the shuttle stayed alive.
+[chuckle] There were moments where everyone watching probably needed a little rest afterwards.
+[emphasis] And after all that work, the final shot becomes even more satisfying.
+[pause] [impressed] Fantastic effort.
+
+# 14. Smooth / Premium
+[impressed] There was some really smooth badminton throughout this match.
+[softly] Patient build-up, good movement, and then sudden bursts of attack when the opportunity appeared.
+[emphasis] The smashes were powerful, but the rallies leading into them were just as important.
+[warm] Add in some excellent defence and great reactions...
+[pause] [admiring] and you get highlights like these.
+
+# 15. Fun Replay Package
+[excited] If you like rallies, smashes and a little bit of drama, this match delivered.
+[chuckle] There were shuttles flying everywhere, players chasing everything down, and a few reactions that told the whole story.
+[emphasis] Some points ended with power, others with patience.
+[pause] [impressed] Either way, there were plenty of moments worth replaying.
+
+# 16. Competitive
+[focused] Both sides were made to work hard in this match.
+[excited] The attacking play was strong, but very few points came easily because the defence kept responding.
+[emphasis] That created some excellent rallies and some very good finishing shots.
+[pause] [warm] You could see the intensity right through to the closing stages.
+[confident] A proper contest.
+
+# 17. Highlight Reel Style
+[excited] This one gave us plenty for the highlight reel.
+[emphasis] Big smashes, quick exchanges, long rallies, great recoveries, and some brilliant reactions after the points.
+[surprised] A few rallies looked finished more than once before finally coming to an end.
+[chuckle] Badminton has a habit of doing that.
+[pause] [impressed] A lot of good moments packed into one match.
+
+# 18. Slight Aussie Feel
+[excited] That was a cracking match!
+[impressed] Plenty of long rallies, some serious power on the smashes, and excellent defence on both sides.
+[chuckle] Nobody was giving much away out there.
+[emphasis] The big points had plenty of pressure behind them too.
+[pause] [warm] How good was that!
+
+# 19. End-to-End Match
+[focused] From the opening rallies right through to the final shot, this match kept a good intensity.
+[excited] There were powerful attacks, fast exchanges, and some really determined defensive work.
+[emphasis] The rallies became more important as the match went on.
+[warm] And the reactions afterwards showed just how hard every point was being fought for.
+[pause] [impressed] A really solid match.
+
+# 20. Full Highlight Summary
+[excited] A little bit of everything in this one.
+[emphasis] Long rallies, sharp net exchanges, big smashes, last-second recoveries, and some great finishing shots.
+[surprised] There were moments when the point looked completely over... only for the shuttle to come back again.
+[warm] Plenty of emotion on court as well, especially after the tougher rallies.
+[pause] [confident] That's what makes a good badminton match.
