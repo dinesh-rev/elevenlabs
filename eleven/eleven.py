@@ -5,11 +5,18 @@ from elevenlabs.core.api_error import ApiError
 import os
 import random
 import sys
+from pathlib import Path
 
-load_dotenv()
+# Anchor everything to this file's folder so the script works from any cwd.
+BASE_DIR = Path(__file__).resolve().parent
+
+load_dotenv(BASE_DIR / ".env")
+
+# Hardcoded key - note this file is tracked by git, unlike .env.
+API_KEY = "sk_085bf22fe1e67e0c5d223a3289e40463fe4e61d6bf9fdcdf"
 
 elevenlabs = ElevenLabs(
-  api_key=os.getenv("ELEVENLABS_API_KEY"),
+  api_key=os.getenv("ELEVENLABS_API_KEY") or API_KEY,
 )
 
 # Phrases live in phrases/<category>.txt - one phrase per block, blank line
@@ -17,7 +24,7 @@ elevenlabs = ElevenLabs(
 # starts a section; pass section= to load only that part of the file, e.g.
 # smash.txt has "no-players" and "with-players".
 def load_phrases(category, section=None):
-    text = open(f"phrases/{category}.txt", encoding="utf-8").read()
+    text = (BASE_DIR / "phrases" / f"{category}.txt").read_text(encoding="utf-8")
     blocks = []
     current = None
     for block in text.split("\n\n"):
@@ -32,12 +39,12 @@ def load_phrases(category, section=None):
     return blocks
 
 
-CATEGORY = "smash"  # match_start, rally, smash, highlights, winners, convo
+CATEGORY = "winners"  # match_start, rally, smash, highlights, winners, convo
 SECTION = None  # for smash: "no-players" or "with-players"
 text = random.choice(load_phrases(CATEGORY, SECTION))
 print(f"[{CATEGORY}] {text}")
 
-output_path = f"output_{CATEGORY}.mp3"
+output_path = BASE_DIR / f"output_{CATEGORY}.mp3"
 
 try:
     audio = elevenlabs.text_to_speech.convert(
@@ -72,7 +79,7 @@ except ApiError as e:
     print(f"{output_path} left unchanged.", file=sys.stderr)
     sys.exit(1)
 
-tmp_path = output_path + ".part"
+tmp_path = output_path.with_suffix(".mp3.part")
 with open(tmp_path, "wb") as f:
     f.write(data)
 os.replace(tmp_path, output_path)
