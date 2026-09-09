@@ -5,6 +5,7 @@ import os
 import random
 import re
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -28,12 +29,15 @@ def load_env_file(path):
 
 load_env_file(BASE_DIR / ".env")
 
-# Hardcoded key - note this file is tracked by git, unlike .env.
-API_KEY = "sk_085bf22fe1e67e0c5d223a3289e40463fe4e61d6bf9fdcdf"
+# The key lives in .env (gitignored), never in this file: it is tracked by git
+# and pushed to a public remote.
+API_KEY = os.getenv("ELEVENLABS_API_KEY")
+if not API_KEY:
+    print("ELEVENLABS_API_KEY not set. Put it in eleven/.env as:\n"
+          "    ELEVENLABS_API_KEY=sk_...", file=sys.stderr)
+    sys.exit(1)
 
-elevenlabs = ElevenLabs(
-  api_key=os.getenv("ELEVENLABS_API_KEY") or API_KEY,
-)
+elevenlabs = ElevenLabs(api_key=API_KEY)
 
 # Phrases live in phrases/<category>.txt - one phrase per block, blank line
 # between blocks, "#" lines are labels and are ignored. A "## <name>" line
@@ -77,29 +81,48 @@ STATUS = ""         # "LIVE", "COMPLETED", ...
 COMPLETED = False
 WINNER = ""         # filled with a name once the match is decided
 CONFIRMED = False   # the feed's own nameState; False = names still settling
+SWAPPED = False     # feed's "swapped" flag; see the note in fill()
+LAST_SCORER = ""    # "1" or "2": which side won the most recent point
 
 LIVE = True         # False = ignore the socket and use generic phrases
+
+# update() runs on live.py's websocket thread while the main thread reads these
+# variables, so both sides take this lock to avoid reading half of one frame
+# and half of the next.
+STATE_LOCK = threading.Lock()
 
 
 def update(record):
     """Copy one court record from the socket into the variables above."""
     global COURT, COURT_NAME, MATCH_ID, PLAYER1, PLAYER2, COUNTRY1, COUNTRY2
     global SCORE1, SCORE2, GAMES1, GAMES2, SET_NO, STATUS, COMPLETED
-    global WINNER, CONFIRMED
+    global WINNER, CONFIRMED, SWAPPED, LAST_SCORER
     if COURT and record["court"] and record["court"] != COURT:
         return                      # another court on the same feed
-    COURT = COURT or record["court"]   # latch onto the first court seen
-    COURT_NAME, MATCH_ID = record["court_name"], record["match_id"]
-    if record["confirmed"]:
-        # scores still track while the feed settles on the names, but an
-        # unconfirmed name must never reach the commentary
-        PLAYER1, COUNTRY1 = record["player1"], record["country1"]
-        PLAYER2, COUNTRY2 = record["player2"], record["country2"]
-    SCORE1, SCORE2 = record["score1"], record["score2"]
-    GAMES1, GAMES2 = record["games1"], record["games2"]
-    SET_NO, STATUS = record["set_no"], record["status"]
-    COMPLETED, WINNER = record["completed"], record["winner"]
-    CONFIRMED = record["confirmed"]
+    with STATE_LOCK:
+        COURT = COURT or record["court"]   # latch onto the first court seen
+        if record["match_id"] != MATCH_ID:
+            # A new match on this court. The previous match's names would
+            # otherwise stay until the feed confirms the new ones, pairing old
+            # players with the new score.
+            PLAYER1 = PLAYER2 = COUNTRY1 = COUNTRY2 = ""
+            WINNER = LAST_SCORER = ""
+            SCORE1 = SCORE2 = 0
+        elif record["score1"] == SCORE1 + 1 and record["score2"] == SCORE2:
+            LAST_SCORER = "1"       # only +1 is a point; bigger jumps and any
+        elif record["score2"] == SCORE2 + 1 and record["score1"] == SCORE1:
+            LAST_SCORER = "2"       # decrease are the feed correcting itself
+        COURT_NAME, MATCH_ID = record["court_name"], record["match_id"]
+        if record["confirmed"]:
+            # scores still track while the feed settles on the names, but an
+            # unconfirmed name must never reach the commentary
+            PLAYER1, COUNTRY1 = record["player1"], record["country1"]
+            PLAYER2, COUNTRY2 = record["player2"], record["country2"]
+        SCORE1, SCORE2 = record["score1"], record["score2"]
+        GAMES1, GAMES2 = record["games1"], record["games2"]
+        SET_NO, STATUS = record["set_no"], record["status"]
+        COMPLETED, WINNER = record["completed"], record["winner"]
+        CONFIRMED, SWAPPED = record["confirmed"], record["swapped"]
 
 
 def connect(timeout=30):
@@ -126,7 +149,12 @@ def fill(text):
     else:
         winner = PLAYER2
     opponent = PLAYER2 if winner == PLAYER1 else PLAYER1
-    for key, value in {"player": PLAYER1, "winner": winner, "opponent": opponent,
+    # {player} is whoever won the most recent point, not always side 1. The
+    # feed never says who played the shot, so this is the closest it can get.
+    # NOTE: if SWAPPED ever flips mid-match, side 1/2 may map to the other
+    # player; the frame log will show whether this feed does that.
+    player = PLAYER2 if LAST_SCORER == "2" else PLAYER1
+    for key, value in {"player": player, "winner": winner, "opponent": opponent,
                        "country": COUNTRY1, "court": COURT}.items():
         if value:
             text = text.replace("{%s}" % key, str(value))
@@ -146,7 +174,7 @@ def pick(category, section=None):
     return None
 
 
-CATEGORY = "rally"  # match_start, rally, smash, highlights, winners, convo
+CATEGORY = "smash"  # match_start, rally, smash, highlights, winners, convo
 SECTION = None  # for smash: "no-players" or "with-players"
 
 if LIVE:
@@ -158,20 +186,25 @@ if LIVE:
         print("no live match data; falling back to generic phrases",
               file=sys.stderr)
 
-if CATEGORY == "smash" and SECTION is None:
-    SECTION = "with-players" if PLAYER1 else "no-players"
+# held across the whole selection so the phrase cannot be built from two
+# different frames while the socket thread keeps updating
+with STATE_LOCK:
+    if CATEGORY == "smash" and SECTION is None:
+        SECTION = "with-players" if PLAYER1 else "no-players"
 
-text = pick(CATEGORY, SECTION)
-if text is None:
-    # every phrase in this category needs a name we do not have
-    text = pick(CATEGORY, "no-players") if CATEGORY == "smash" else None
+    text = pick(CATEGORY, SECTION)
+    if text is None:
+        # every phrase in this category needs a name we do not have
+        text = pick(CATEGORY, "no-players") if CATEGORY == "smash" else None
 if text is None:
     print(f"No usable {CATEGORY} phrase without player names.", file=sys.stderr)
     sys.exit(1)
 
 print(f"[{CATEGORY}] {text}")
 
-output_path = BASE_DIR / f"output_Audio1_{CATEGORY}.mp3"
+AUDIO_DIR = BASE_DIR / "configs" / "audio"
+AUDIO_DIR.mkdir(parents=True, exist_ok=True)
+output_path = AUDIO_DIR / f"output_Audio1_{CATEGORY}.mp3"
 
 try:
     audio = elevenlabs.text_to_speech.convert(

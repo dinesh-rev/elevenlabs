@@ -2,4 +2,7 @@
 __pycache__/
 *.pyc
 *.mp3.part
-elevenlabs/eleven/configs/
+
+# generated audio and captured feed logs
+eleven/configs/
+eleven/logs/

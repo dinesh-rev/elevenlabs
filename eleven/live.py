@@ -33,7 +33,7 @@ LOG_DIR = BASE_DIR / "logs"
 # One tournament subscription carries every court, so frames for other courts
 # arrive whether we want them or not and are dropped on arrival.
 # Set COURT = "" to follow all of them again (COURTS is keyed by court number).
-COURT = "1"
+COURT = "2"
 COURTS = {}  # court -> record, see read_frame() for the fields
 
 # Names on a scoreboard are tailed with a country code. Matching a bare
@@ -105,6 +105,9 @@ def read_frame(frame):
         "completed": bool(m.get("completed")),
         "winner": p1 if side == "A" else p2 if side == "B" else "",
         "confirmed": confirmed,
+        # passed through unused: if this ever flips mid-match it may mean the
+        # board swapped sides, which would invert the A/B -> player1/2 mapping
+        "swapped": bool(m.get("swapped")),
     }
 
 
