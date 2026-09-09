@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 *.mp3.part
+elevenlabs/eleven/configs/

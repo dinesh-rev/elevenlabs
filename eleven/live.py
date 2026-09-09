@@ -30,12 +30,11 @@ TOURNAMENT_KEY = "655"
 BASE_DIR = Path(__file__).resolve().parent
 LOG_DIR = BASE_DIR / "logs"
 
-# The scoreboard is per court ("COURT 0") and one tournament subscription
-# carries every court, so state is keyed by court number.
-COURTS = {}  # court -> dict(court player1 player2 country1 country2 score1 score2 round status)
-
-BLANK = {"court": "", "player1": "", "player2": "", "country1": "", "country2": "",
-         "score1": 0, "score2": 0, "round": "", "status": ""}
+# One tournament subscription carries every court, so frames for other courts
+# arrive whether we want them or not and are dropped on arrival.
+# Set COURT = "" to follow all of them again (COURTS is keyed by court number).
+COURT = "1"
+COURTS = {}  # court -> record, see read_frame() for the fields
 
 # Names on a scoreboard are tailed with a country code. Matching a bare
 # [A-Z]{3} is not safe -- it eats real surnames like LEE, WEI or TAN.
@@ -47,117 +46,65 @@ COUNTRY_CODES = {
     "SLO", "SRI", "SUI", "SWE", "THA", "TUR", "UKR", "USA", "VIE", "WAL",
 }
 
-NAME_KEY = re.compile(r"(player|athlete|competitor|team|name|winner|opponent)", re.I)
-SKIP_KEY = re.compile(r"(id|key|uuid|url|type)$", re.I)
-COURT_KEY = re.compile(r"court", re.I)
-COUNTRY_KEY = re.compile(r"(country|nation|flag|noc)", re.I)
-SCORE_KEY = re.compile(r"(score|points?)", re.I)
-ROUND_KEY = re.compile(r"round", re.I)
-STATUS_KEY = re.compile(r"(status|state)", re.I)
+def tidy_name(raw):
+    """'LOW H Y  / NG E C' -> 'Low H Y and Ng E C'.
 
-
-def clean(raw):
-    """Strip scoreboard decoration from a name. Returns '' if it is not one."""
+    Doubles pairs arrive slash-separated; "and" reads better than "/" aloud.
+    """
     if not isinstance(raw, str):
         return ""
-    s = re.sub(r"[\[(]\s*\d+\s*[\])]", " ", raw)   # seeding marks: [1], (2)
-    s = re.sub(r"\s+", " ", s).strip(" ,-/|")      # keep dots: they are initials
-    if not 2 <= len(s) <= 40 or not re.search(r"[A-Za-z]", s):
-        return ""
-    parts = s.split()
-    if len(parts) > 1 and parts[-1].upper().strip(".") in COUNTRY_CODES:
-        parts.pop()                                # country is kept separately
-    if not parts or s.upper().strip(".") in COUNTRY_CODES:
-        return ""
-    s = " ".join(parts)
-    if s.isupper():  # capitalise each letter run so "C.W." survives as "C.W."
-        s = re.sub(r"[A-Za-z]+", lambda m: m.group(0).capitalize(), s)
-    return s
+    people = []
+    for part in raw.split("/"):
+        part = re.sub(r"[\[(]\s*\d+\s*[\])]", " ", part)   # seeding marks
+        part = re.sub(r"\s+", " ", part).strip(" ,-|")
+        toks = part.split()
+        if len(toks) > 1 and toks[-1].upper().strip(".") in COUNTRY_CODES:
+            toks.pop()                                       # kept separately
+        part = " ".join(toks)
+        if part.isupper():  # capitalise letter runs so "C.W." stays "C.W."
+            part = re.sub(r"[A-Za-z]+", lambda m: m.group(0).capitalize(), part)
+        if part and re.search(r"[A-Za-z]", part):
+            people.append(part)
+    return " and ".join(people)
 
 
-def country_of(raw, holder=None):
-    """Country code for a name: from a sibling field, else the name's own tail."""
-    if isinstance(holder, dict):
-        for k, v in holder.items():
-            if COUNTRY_KEY.search(k) and isinstance(v, str):
-                code = v.strip().upper()
-                if code in COUNTRY_CODES:
-                    return code
-    if isinstance(raw, str):
-        parts = raw.split()
-        if len(parts) > 1:
-            tail = parts[-1].upper().strip(".")
-            if tail in COUNTRY_CODES:
-                return tail
+def country_of(raw):
+    """Trailing country code on a name, if the feed puts one there."""
+    if not isinstance(raw, str):
+        return ""
+    for part in raw.split("/"):
+        toks = part.split()
+        if len(toks) > 1 and toks[-1].upper().strip(".") in COUNTRY_CODES:
+            return toks[-1].upper().strip(".")
     return ""
 
 
-def find_people(obj, out=None):
-    """Every (name, country) pair in a frame, in the order the feed lists them."""
-    if out is None:
-        out = []
-    if isinstance(obj, dict):
-        for k, v in obj.items():
-            if isinstance(v, str) and NAME_KEY.search(k) and not SKIP_KEY.search(k):
-                name = clean(v)
-                if name and name not in [n for n, _ in out]:
-                    out.append((name, country_of(v, obj)))
-        for v in obj.values():
-            if not isinstance(v, str):
-                find_people(v, out)
-    elif isinstance(obj, list):
-        for v in obj:
-            find_people(v, out)
-    return out
-
-
-def find_value(obj, key_re, types=(str, int)):
-    """First value in the frame whose key matches, at any depth."""
-    if isinstance(obj, dict):
-        for k, v in obj.items():
-            if key_re.search(k) and isinstance(v, types) and not isinstance(v, bool):
-                return v
-        for v in obj.values():
-            got = find_value(v, key_re, types)
-            if got is not None:
-                return got
-    elif isinstance(obj, list):
-        for v in obj:
-            got = find_value(v, key_re, types)
-            if got is not None:
-                return got
-    return None
-
-
-def find_scores(obj):
-    """(score1, score2) from a two-element score list, or score1/score2 keys."""
-    pair = find_value(obj, SCORE_KEY, types=(list,))
-    if isinstance(pair, list) and len(pair) >= 2:
-        try:
-            return int(pair[0]), int(pair[1])
-        except (TypeError, ValueError):
-            pass
-    a = find_value(obj, re.compile(r"(score1|score_1|scoreA|homeScore)", re.I), (int,))
-    b = find_value(obj, re.compile(r"(score2|score_2|scoreB|awayScore)", re.I), (int,))
-    return (a or 0, b or 0)
-
-
 def read_frame(frame):
-    """Turn one frame into a court record, or None if it carries no match data."""
-    people = find_people(frame)
-    if len(people) < 2:
-        # an idle board sends blank names, and a single-name event frame names
-        # only one player: neither describes a full match
-        return None
-    court = find_value(frame, COURT_KEY)
-    s1, s2 = find_scores(frame)
+    """Turn an EXT_MATCH_UPDATED frame into a court record, else None."""
+    if not str(frame.get("type", "")).startswith("EXT_MATCH"):
+        return None                       # ACKs and anything else
+    m = frame.get("match") or {}
+    p1, p2 = tidy_name(m.get("t1_tabname")), tidy_name(m.get("t2_tabname"))
+    if not (p1 and p2):
+        return None                       # board not populated yet
+    # the feed says whether it has settled on the names; anything else is a
+    # reading still in flux and must not be spoken
+    confirmed = m.get("nameState") == "CONFIRMED"
+    side = m.get("winner")                # "A", "B" or null
     return {
-        "court": "" if court is None else str(court),
-        "player1": people[0][0], "country1": people[0][1],
-        "player2": people[1][0], "country2": people[1][1],
-        "score1": s1, "score2": s2,
-        "round": str(find_value(frame, ROUND_KEY) or ""),
-        "status": str(find_value(frame, STATUS_KEY) or ""),
+        "court": str(m.get("courtNo", "")),
+        "court_name": str(m.get("court", "")),
+        "match_id": str(m.get("extMatchId", "")),
+        "player1": p1, "player2": p2,
+        "country1": country_of(m.get("t1_tabname")),
+        "country2": country_of(m.get("t2_tabname")),
+        "score1": int(m.get("scoreA") or 0), "score2": int(m.get("scoreB") or 0),
+        "games1": int(m.get("winsA") or 0), "games2": int(m.get("winsB") or 0),
+        "set_no": int(m.get("currentSet") or 0),
+        "status": str(m.get("status") or ""),
+        "completed": bool(m.get("completed")),
+        "winner": p1 if side == "A" else p2 if side == "B" else "",
+        "confirmed": confirmed,
     }
 
 
@@ -187,11 +134,17 @@ async def listen(key=TOURNAMENT_KEY, on_change=None, log=True):
                         except json.JSONDecodeError:
                             continue
                         record = read_frame(frame)
+                        if record and COURT and record["court"] != COURT:
+                            continue  # another court on the same feed
                         if record and record != COURTS.get(record["court"]):
                             COURTS[record["court"]] = record
-                            print("court {court}: {player1} ({country1}) {score1}"
-                                  " - {score2} {player2} ({country2}) "
-                                  "[{round} {status}]".format(**record), flush=True)
+                            print("court {court}: {player1} {score1} - {score2}"
+                                  " {player2}  (games {games1}-{games2}, set"
+                                  " {set_no}, {status}"
+                                  "{unconfirmed})".format(
+                                      unconfirmed="" if record["confirmed"]
+                                      else ", NAMES UNCONFIRMED",
+                                      **record), flush=True)
                             if on_change:
                                 on_change(record)
             except asyncio.CancelledError:
@@ -218,7 +171,9 @@ def start(key=TOURNAMENT_KEY, on_change=None, log=True):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--key", default=TOURNAMENT_KEY)
+    ap.add_argument("--court", default=COURT, help='court to follow; "" for all')
     args = ap.parse_args()
+    COURT = args.court
     try:
         asyncio.run(listen(args.key))
     except KeyboardInterrupt:

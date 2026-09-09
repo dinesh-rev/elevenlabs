@@ -1,5 +1,4 @@
-from dotenv import load_dotenv
-from elevenlabs.client import ElevenLabs
+from elevenlabs import ElevenLabs
 from elevenlabs.types import VoiceSettings
 from elevenlabs.core.api_error import ApiError
 import os
@@ -12,7 +11,22 @@ from pathlib import Path
 # Anchor everything to this file's folder so the script works from any cwd.
 BASE_DIR = Path(__file__).resolve().parent
 
-load_dotenv(BASE_DIR / ".env")
+def load_env_file(path):
+    """Load simple KEY=VALUE entries without requiring python-dotenv."""
+    if not path.is_file():
+        return
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip("\"'")
+        if key:
+            os.environ.setdefault(key, value)
+
+
+load_env_file(BASE_DIR / ".env")
 
 # Hardcoded key - note this file is tracked by git, unlike .env.
 API_KEY = "sk_085bf22fe1e67e0c5d223a3289e40463fe4e61d6bf9fdcdf"
@@ -45,28 +59,47 @@ def load_phrases(category, section=None):
 # Live match variables. These start empty and are refilled by live.py every
 # time the websocket reports a change on the court we are following.
 # ---------------------------------------------------------------------------
-COURT = "0"        # court to follow; "" follows whichever court reports first
-PLAYER1 = ""
+# The feed carries every court in the tournament; live.py drops the rest.
+# "" would latch onto whichever court reported first.
+COURT = "1"
+COURT_NAME = ""
+MATCH_ID = ""
+PLAYER1 = ""        # doubles pairs arrive joined: "Low H Y and Ng E C"
 PLAYER2 = ""
-COUNTRY1 = ""
+COUNTRY1 = ""       # this feed carries no country field; see notes below
 COUNTRY2 = ""
-SCORE1 = 0
+SCORE1 = 0          # points in the current game
 SCORE2 = 0
-ROUND = ""
-STATUS = ""
+GAMES1 = 0          # games won so far
+GAMES2 = 0
+SET_NO = 0
+STATUS = ""         # "LIVE", "COMPLETED", ...
+COMPLETED = False
+WINNER = ""         # filled with a name once the match is decided
+CONFIRMED = False   # the feed's own nameState; False = names still settling
 
-LIVE = True        # False = ignore the socket and use generic phrases
+LIVE = True         # False = ignore the socket and use generic phrases
 
 
 def update(record):
     """Copy one court record from the socket into the variables above."""
-    global PLAYER1, PLAYER2, COUNTRY1, COUNTRY2, SCORE1, SCORE2, ROUND, STATUS
+    global COURT, COURT_NAME, MATCH_ID, PLAYER1, PLAYER2, COUNTRY1, COUNTRY2
+    global SCORE1, SCORE2, GAMES1, GAMES2, SET_NO, STATUS, COMPLETED
+    global WINNER, CONFIRMED
     if COURT and record["court"] and record["court"] != COURT:
-        return  # another court on the same feed
-    PLAYER1, COUNTRY1 = record["player1"], record["country1"]
-    PLAYER2, COUNTRY2 = record["player2"], record["country2"]
+        return                      # another court on the same feed
+    COURT = COURT or record["court"]   # latch onto the first court seen
+    COURT_NAME, MATCH_ID = record["court_name"], record["match_id"]
+    if record["confirmed"]:
+        # scores still track while the feed settles on the names, but an
+        # unconfirmed name must never reach the commentary
+        PLAYER1, COUNTRY1 = record["player1"], record["country1"]
+        PLAYER2, COUNTRY2 = record["player2"], record["country2"]
     SCORE1, SCORE2 = record["score1"], record["score2"]
-    ROUND, STATUS = record["round"], record["status"]
+    GAMES1, GAMES2 = record["games1"], record["games2"]
+    SET_NO, STATUS = record["set_no"], record["status"]
+    COMPLETED, WINNER = record["completed"], record["winner"]
+    CONFIRMED = record["confirmed"]
 
 
 def connect(timeout=30):
@@ -75,7 +108,8 @@ def connect(timeout=30):
     live.start(on_change=update)
     deadline = time.time() + timeout
     while time.time() < deadline:
-        if PLAYER1 and PLAYER2:
+        # CONFIRMED is the feed's own signal that it has settled on the names
+        if PLAYER1 and PLAYER2 and CONFIRMED:
             return True
         time.sleep(0.5)
     return False
@@ -83,15 +117,22 @@ def connect(timeout=30):
 
 def fill(text):
     """Substitute {player}, {winner}, {opponent}, {country}, {court}."""
-    # whoever is ahead is the winner; at match end that is the actual result
-    winner, opponent = ((PLAYER1, PLAYER2) if SCORE1 >= SCORE2
-                        else (PLAYER2, PLAYER1))
+    # the feed names the winner once the match is decided; before that, fall
+    # back to whoever leads on games, then on points
+    if WINNER:
+        winner = WINNER
+    elif (GAMES1, SCORE1) >= (GAMES2, SCORE2):
+        winner = PLAYER1
+    else:
+        winner = PLAYER2
+    opponent = PLAYER2 if winner == PLAYER1 else PLAYER1
     for key, value in {"player": PLAYER1, "winner": winner, "opponent": opponent,
                        "country": COUNTRY1, "court": COURT}.items():
         if value:
             text = text.replace("{%s}" % key, str(value))
-    # "Lee C.W." + "." reads as a stumble; leave deliberate "..." pauses alone
-    return re.sub(r"\.\.(?!\.)", ".", text)
+    # a name ending in an initial ("C.W.") plus the phrase's own full stop reads
+    # as a stumble; the lookarounds keep deliberate "..." pauses intact
+    return re.sub(r"(?<!\.)\.\.(?!\.)", ".", text)
 
 
 def pick(category, section=None):
@@ -105,13 +146,14 @@ def pick(category, section=None):
     return None
 
 
-CATEGORY = "winners"  # match_start, rally, smash, highlights, winners, convo
+CATEGORY = "rally"  # match_start, rally, smash, highlights, winners, convo
 SECTION = None  # for smash: "no-players" or "with-players"
 
 if LIVE:
     if connect():
-        print(f"court {COURT}: {PLAYER1} ({COUNTRY1}) {SCORE1}"
-              f" - {SCORE2} {PLAYER2} ({COUNTRY2}) [{ROUND} {STATUS}]")
+        print(f"{COURT_NAME or 'court ' + COURT}: {PLAYER1} {SCORE1}"
+              f" - {SCORE2} {PLAYER2}"
+              f"  (games {GAMES1}-{GAMES2}, set {SET_NO}, {STATUS})")
     else:
         print("no live match data; falling back to generic phrases",
               file=sys.stderr)
@@ -129,7 +171,7 @@ if text is None:
 
 print(f"[{CATEGORY}] {text}")
 
-output_path = BASE_DIR / f"output_{CATEGORY}.mp3"
+output_path = BASE_DIR / f"output_Audio1_{CATEGORY}.mp3"
 
 try:
     audio = elevenlabs.text_to_speech.convert(
