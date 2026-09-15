@@ -143,6 +143,12 @@ def values_for(s):
         "player": s["player2"] if s["last_scorer"] == "2" else s["player1"],
         "winner": winner,
         "opponent": s["player2"] if winner == s["player1"] else s["player1"],
+        # the two sides by position, which match_start.txt and rally.txt use to
+        # name both players in one line
+        "player1": s["player1"],
+        "player2": s["player2"],
+        "country1": s["country1"],
+        "country2": s["country2"],
         "country": s["country1"],
         "court": s["court"],
     }

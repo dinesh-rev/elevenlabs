@@ -24,10 +24,14 @@ what makes joined mp3 clips click at the seams.
 import argparse
 import queue
 import random
+import shutil
 import re
 import threading
+import traceback
+import uuid
 
 from flask import Flask, request, jsonify, send_file
+from werkzeug.exceptions import HTTPException
 
 import core
 import live
@@ -100,8 +104,16 @@ def resolved(raw, values):
     return PLACEHOLDER.sub(lambda m: values.get(m.group(1), m.group(0)), raw)
 
 
-def build(pieces, stem):
-    """Render every piece, join in order, save one clip. Returns a report."""
+KEEP_CLIPS = 30      # how many finished clips to leave on disk
+
+
+def build(pieces, label):
+    """Render every piece, join in order, save one clip. Returns a report.
+
+    Each call writes its own file. A fixed name per category would be
+    overwritten by a second request arriving while the first is still queued,
+    losing one clip and playing the other twice.
+    """
     audio, detail, made, reused = [], [], 0, 0
     for kind, text in pieces:
         pcm, cached = core.render_pcm(text, dry=DRY)
@@ -112,20 +124,38 @@ def build(pieces, stem):
         else:
             made += len(text)
     joined = b"".join(audio)          # same rate and channels, so this is it
-    saved = core.save_clip(stem, joined) if joined and stem else None
-    if saved:
+    saved = None
+    if joined and label:
+        saved = core.save_clip(
+            AUDIO_DIR / f"clip_{label}_{uuid.uuid4().hex[:8]}", joined)
+        # a stable "most recent" name as well, for anything watching one file
+        shutil.copyfile(saved, AUDIO_DIR / f"output_Audio1_{label}{saved.suffix}")
+        prune_clips()
         JOBS.put(saved)
     return {"pieces": detail, "synthesized_chars": made, "reused_chars": reused,
             "seconds": round(len(joined) / 2 / SAMPLE_RATE, 2),
             "saved_as": str(saved) if saved else None}
 
 
+def prune_clips():
+    """Keep the newest KEEP_CLIPS, so per-request files do not pile up."""
+    clips = sorted(AUDIO_DIR.glob("clip_*"), key=lambda f: f.stat().st_mtime)
+    for old in clips[:-KEEP_CLIPS]:
+        old.unlink(missing_ok=True)
+
+
 def speaker():
-    """One clip at a time, so two triggers never talk over each other."""
+    """One clip at a time, so two triggers never talk over each other.
+
+    Every error is caught: without this, one failed clip ends the thread and
+    nothing is ever played again, silently.
+    """
     while True:
         path = JOBS.get()
         try:
             core.play(path)
+        except Exception as e:
+            print(f"[speaker] {type(e).__name__}: {e}", flush=True)
         finally:
             JOBS.task_done()
 
@@ -144,7 +174,7 @@ def play():
         text += " {name}"                 # no marker given, so name goes last
     values = {"name": name}
     try:
-        report = build(split_phrase(text, values), None if DRY else AUDIO_DIR / "play")
+        report = build(split_phrase(text, values), None if DRY else "play")
     except Exception as e:
         return jsonify(error=readable(e)), 502
     spoken = resolved(text, values)
@@ -167,20 +197,47 @@ def pick_raw(category, section, values):
     return None
 
 
-@app.route("/<category>", methods=["GET", "POST"])
-def say(category):
+@app.route("/say", methods=["GET", "POST"])
+def say():
+    """Pick a phrase and speak it. Everything is a query parameter:
+
+        /say?category=smash            which phrase file to pick from
+             &player=A|B               which side of the live match (optional)
+             &player=Heena             or the name itself, if the feed has none
+             &player1=..&player2=..    both sides, for phrases that name two
+             &section=with-players     override the smash section (optional)
+
+    Any placeholder a phrase uses can be passed as a query parameter of the
+    same name; anything not given falls back to the live match.
+    """
+    category = (request.values.get("category") or "").strip()
+    if not category:
+        return jsonify(error="category is required",
+                       categories=CATEGORIES), 400
+    return say_category(category)
+
+
+def say_category(category):
+    """The work behind /say, shared with the per-category shortcut routes."""
     if category not in CATEGORIES:
         return jsonify(error=f"unknown category {category!r}",
                        categories=CATEGORIES), 404
     s = STATE.snapshot()
     values = core.values_for(s)
-    # the UI can say who the line is about; without it, whoever won the last
-    # point is used, which is all the feed can tell us
-    chosen = (request.values.get("player") or "").upper()
-    if chosen in ("A", "1"):
+    # "player=A" or "player=B" picks a side of the live match; without it,
+    # whoever won the last point is used, which is all the feed can tell us
+    chosen = (request.values.get("player") or "").strip()
+    if chosen.upper() in ("A", "1"):
         values["player"] = s["player1"]
-    elif chosen in ("B", "2"):
+    elif chosen.upper() in ("B", "2"):
         values["player"] = s["player2"]
+    # Any placeholder can also be given literally -- player=Heena,
+    # player1=..., winner=..., country1=... -- so a line can be spoken for
+    # someone the feed does not know, or before a match is on court.
+    for key in list(values):
+        given = request.values.get(key)
+        if given and not (key == "player" and chosen.upper() in ("A", "1", "B", "2")):
+            values[key] = given.strip()
     section = request.values.get("section")
     if category == "smash" and section is None:
         section = "with-players" if values["player"] else "no-players"
@@ -194,8 +251,7 @@ def say(category):
     RECENT.append(raw)
     del RECENT[:-6]
     try:
-        report = build(split_phrase(raw, values),
-                       None if DRY else AUDIO_DIR / f"output_Audio1_{category}")
+        report = build(split_phrase(raw, values), None if DRY else category)
     except Exception as e:
         return jsonify(error=readable(e), category=category), 502
     spoken = resolved(raw, values)
@@ -204,15 +260,47 @@ def say(category):
     return jsonify(category=category, text=spoken, **report)
 
 
+def _shortcut(category):
+    """Build the view for /<category>, e.g. /smash -> say_category("smash")."""
+    def view():
+        return say_category(category)
+    return view
+
+
 # ---------------------------------------------------------------------------
 # housekeeping
 # ---------------------------------------------------------------------------
+@app.errorhandler(HTTPException)
+def http_error(e):
+    """JSON for every HTTP error, since this is an API.
+
+    Covers 405 and the rest, not just 404; Flask's default is an HTML page,
+    which callers parsing JSON cannot read.
+    """
+    return jsonify(error=e.description, status=e.code,
+                   **({"help": "GET /"} if e.code == 404 else {})), e.code
+
+
+@app.errorhandler(Exception)
+def unhandled(e):
+    """A bug in here is still reported as JSON, with the cause named.
+
+    Without this a missing phrases file (say) returns an HTML 500 and the
+    panel can only say "Unexpected token '<'".
+    """
+    traceback.print_exc()
+    return jsonify(error=readable(e), status=500,
+                   type=type(e).__name__), 500
 @app.get("/")
 def index():
     return ("commentary server\n\n"
+            "GET /say?category=...         pick a phrase and speak it\n"
+            "        &player=A|B           which side of the live match\n"
+            "        &player=Heena         or the name itself\n"
+            "        &section=...          override the smash section\n"
             "GET /play?text=...&name=...   speak words you supply\n"
             "                              put {name} in text to place the name\n"
-            f"GET /<category>               {', '.join(CATEGORIES)}\n"
+            f"GET /<category>               shortcut: {', '.join(CATEGORIES)}\n"
             "GET /state                    current match\n"
             "GET /pieces                   how many pieces are cached\n"
             "GET /warm                     cost of pre-rendering every phrase\n"
@@ -285,6 +373,23 @@ def warm():
             return jsonify(error=readable(e), rendered=done,
                            remaining=len(todo) - done), 502
     return jsonify(rendered=len(todo), characters=chars)
+
+
+# Registered one by one rather than as a single "/<category>" rule. A wildcard
+# would NOT shadow the static routes -- Werkzeug ranks those higher whatever
+# the registration order -- but it would absorb every unmatched path, so
+# /favicon.ico and /metrics come back as "unknown category".
+# The cost of naming each route is that a category could collide with a route
+# that already exists, which Flask accepts silently: GET would reach one view
+# and POST the other. Registered last, so url_map is complete, and checked.
+_taken = {rule.rule.strip("/") for rule in app.url_map.iter_rules()}
+for _c in CATEGORIES:
+    if _c in _taken:
+        raise RuntimeError(
+            f"category {_c!r} collides with the existing /{_c} route; "
+            f"rename the phrase file or the route")
+    app.add_url_rule(f"/{_c}", f"shortcut_{_c}", _shortcut(_c),
+                     methods=["GET", "POST"])
 
 
 def main():

@@ -157,8 +157,12 @@ $("go").onclick = async () => {
   $("go").disabled = true;
   $("go").textContent = "Working…";
   try {
-    const r = await fetch(`/${category}?player=${player}`, { method: "POST" });
-    const d = await r.json();
+    const r = await fetch(`/say?category=${category}&player=${player}`,
+                          { method: "POST" });
+    // an error page may not be JSON at all, so never assume it parses
+    let d;
+    try { d = await r.json(); }
+    catch { d = { error: `${r.status} ${r.statusText}` }; }
     if (!r.ok) {
       log(`<b>${category}</b> — ${d.error || r.status}`, "err");
     } else {
