@@ -41,6 +41,10 @@ app = Flask(__name__)
 TAG = re.compile(r"\[[a-z ]+\]")
 
 DRY = False
+# False = do not play clips on this machine. The caller fetches "url" from the
+# reply and plays it through its own audio system instead, which is the only
+# way to get control of when a clip starts: core.play() blocks to the end.
+LOCAL_AUDIO = True
 STATE = core.MatchState()
 JOBS = queue.Queue()
 RECENT = []                 # last few blocks, so phrases do not repeat
@@ -131,10 +135,14 @@ def build(pieces, label):
         # a stable "most recent" name as well, for anything watching one file
         shutil.copyfile(saved, AUDIO_DIR / f"output_Audio1_{label}{saved.suffix}")
         prune_clips()
-        JOBS.put(saved)
+        if LOCAL_AUDIO:
+            JOBS.put(saved)
     return {"pieces": detail, "synthesized_chars": made, "reused_chars": reused,
             "seconds": round(len(joined) / 2 / SAMPLE_RATE, 2),
-            "saved_as": str(saved) if saved else None}
+            "saved_as": str(saved) if saved else None,
+            # saved_as is this machine's path, which means nothing to a caller
+            # elsewhere; url is the same clip through /audio, which it can GET.
+            "url": f"/audio/{saved.name}" if saved else None}
 
 
 def prune_clips():
@@ -393,7 +401,7 @@ for _c in CATEGORIES:
 
 
 def main():
-    global DRY
+    global DRY, LOCAL_AUDIO
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", default="127.0.0.1",
                     help="0.0.0.0 to accept calls from other machines")
@@ -401,8 +409,11 @@ def main():
     ap.add_argument("--court", default=live.COURT, help='court to follow; "" for all')
     ap.add_argument("--key", default=live.TOURNAMENT_KEY)
     ap.add_argument("--dry", action="store_true", help="never call ElevenLabs")
+    ap.add_argument("--no-local-audio", action="store_true",
+                    help="do not play clips here; callers fetch the reply's url")
     args = ap.parse_args()
     DRY = args.dry
+    LOCAL_AUDIO = not args.no_local_audio
     live.COURT = args.court
 
     AUDIO_DIR.mkdir(parents=True, exist_ok=True)
@@ -410,7 +421,8 @@ def main():
     live.start(key=args.key, on_change=STATE.update)
 
     print(f"commentary server on http://{args.host}:{args.port}"
-          f"  court={args.court or 'all'}{'  DRY RUN' if DRY else ''}", flush=True)
+          f"  court={args.court or 'all'}{'  DRY RUN' if DRY else ''}"
+          f"{'' if LOCAL_AUDIO else '  no local audio'}", flush=True)
     app.run(host=args.host, port=args.port, threaded=True)
 
 
