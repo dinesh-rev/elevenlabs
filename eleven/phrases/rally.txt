@@ -35,13 +35,7 @@
 [excited] Everything was coming back so quickly there... [emphasis] neither side had much time to reset.
 
 # 10. Slightly Funny
-
-[chuckle] That point just refused to finish... [amused] every time it looked over, back it came again.
-
-
-
-# Match Rally
-
+[chuckle] I think {player1} and {player2} both decided the point wasn't allowed to finish yet. [pause] [amused] Back it came... and back it came again.
 
 # 1. Building Pressure
 [focused] {player1} kept increasing the pressure, but {player2} wouldn't disappear from the rally. [emphasis] That made the final few shots much harder to earn.

@@ -44,6 +44,10 @@ app = Flask(__name__)
 TAG = re.compile(r"\[[a-z ]+\]")
 
 DRY = False
+# False = do not play clips on this machine. The caller fetches "url" from the
+# reply and plays it through its own audio system instead, which is the only
+# way to get control of when a clip starts: core.play() blocks to the end.
+LOCAL_AUDIO = True
 STATE = core.MatchState()
 JOBS = queue.Queue()
 RECENT = []                 # last few blocks, so phrases do not repeat
@@ -141,18 +145,9 @@ def build(pieces, label):
         shutil.copyfile(saved, AUDIO_DIR / f"output_Audio1_{label}{saved.suffix}")
         prune_clips()
         JOBS.put(saved)
-    t_save = time.monotonic() - t0
-    # pieces render one after another, so render time is their sum -- the
-    # single biggest number here, and the one parallelism would collapse
-    log.info("%s: %d pieces, render %.2fs, encode+save %.2fs, total %.2fs",
-             label or "dry", len(pieces), t_render, t_save,
-             time.monotonic() - t_start)
     return {"pieces": detail, "synthesized_chars": made, "reused_chars": reused,
             "seconds": round(len(joined) / 2 / SAMPLE_RATE, 2),
-            "saved_as": str(saved) if saved else None,
-            # so latency can be measured from the client, not just the log
-            "timings": {"render": round(t_render, 2), "save": round(t_save, 2),
-                        "total": round(time.monotonic() - t_start, 2)}}
+            "saved_as": str(saved) if saved else None}
 
 
 def prune_clips():
@@ -434,7 +429,7 @@ for _c in CATEGORIES:
 
 
 def main():
-    global DRY
+    global DRY, LOCAL_AUDIO
     ap = argparse.ArgumentParser()
     ap.add_argument("--host", default="127.0.0.1",
                     help="0.0.0.0 to accept calls from other machines")
@@ -442,19 +437,12 @@ def main():
     ap.add_argument("--court", default=live.COURT, help='court to follow; "" for all')
     ap.add_argument("--key", default=live.TOURNAMENT_KEY)
     ap.add_argument("--dry", action="store_true", help="never call ElevenLabs")
-    ap.add_argument("--debug", action="store_true",
-                    help="log cache hits and per-piece timings")
-    ap.add_argument("--city", default="sydney",
-                    help="Australian venue: " + ", ".join(core.AU_CITIES))
-    ap.add_argument("--lat", type=float, help="venue latitude, overrides --city")
-    ap.add_argument("--lon", type=float, help="venue longitude, overrides --city")
-    ap.add_argument("--no-weather", action="store_true",
-                    help="do not poll for outdoor conditions")
     args = ap.parse_args()
     logging.basicConfig(
         level=logging.DEBUG if args.debug else logging.INFO,
         format="%(asctime)s %(levelname)-5s %(message)s", datefmt="%H:%M:%S")
     DRY = args.dry
+    LOCAL_AUDIO = not args.no_local_audio
     live.COURT = args.court
 
     AUDIO_DIR.mkdir(parents=True, exist_ok=True)
@@ -469,7 +457,8 @@ def main():
         core.start_weather(args.lat, args.lon)
 
     print(f"commentary server on http://{args.host}:{args.port}"
-          f"  court={args.court or 'all'}{'  DRY RUN' if DRY else ''}", flush=True)
+          f"  court={args.court or 'all'}{'  DRY RUN' if DRY else ''}"
+          f"{'' if LOCAL_AUDIO else '  no local audio'}", flush=True)
     app.run(host=args.host, port=args.port, threaded=True)
 
 
