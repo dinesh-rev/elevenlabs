@@ -30,8 +30,16 @@ log = logging.getLogger("commentary")
 BASE_DIR = Path(__file__).resolve().parent
 AUDIO_DIR = BASE_DIR / "configs" / "audio"
 
-VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"   # George
+VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"   # George, the commentary voice
 MODEL_ID = "eleven_v3"
+
+# Two-voice dialogues in convo.txt name their speaker: "Rose: [curious] ...".
+# Anyone not listed here gets the default commentary voice.
+VOICES = {"rose": "zxPaDs5RuZh7fQDkY6mP"}
+
+
+def voice_for(speaker):
+    return VOICES.get(speaker.strip().lower(), VOICE_ID)
 
 CATEGORIES = ["match_start", "rally", "smash", "highlights", "winners",
               "convo", "weather"]
@@ -291,6 +299,37 @@ def client():
             raise RuntimeError("ELEVENLABS_API_KEY not set (put it in eleven/.env)")
         _client = ElevenLabs(api_key=key)
     return _client
+
+
+def render_dialogue(turns, dry=False):
+    """(mp3_bytes, was_cached) for a two-voice dialogue.
+
+    Dialogue is generated as one unit with the voices interleaved, so unlike
+    commentary it cannot be split into reusable pieces -- it caches whole-block
+    only, keyed on the speakers as well as the words.
+    """
+    from elevenlabs.types import DialogueInput
+
+    key = "|".join(f"{v}:{t}" for v, t in turns)
+    digest = hashlib.sha1(f"{MODEL_ID}|{key}".encode()).hexdigest()
+    path = PIECES_DIR / f"dlg_{digest}.mp3"
+    if path.exists():
+        log.debug("cache hit  dialogue %d turns", len(turns))
+        return path.read_bytes(), True
+    if dry:
+        return b"", False
+    t0 = time.monotonic()
+    audio = client().text_to_dialogue.convert(
+        inputs=[DialogueInput(text=t, voice_id=v) for v, t in turns],
+        model_id=MODEL_ID, output_format="mp3_44100_128")
+    data = b"".join(audio)              # buffer first: it can fail mid-stream
+    PIECES_DIR.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(".mp3.part")
+    tmp.write_bytes(data)
+    os.replace(tmp, path)
+    log.info("dialogue %d turns, %d chars in %.2fs", len(turns),
+             sum(len(t) for _, t in turns), time.monotonic() - t0)
+    return data, False
 
 
 def voice_settings():

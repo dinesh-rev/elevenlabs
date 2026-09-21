@@ -1,68 +1,83 @@
+## no-players
+
 # 1. Back and Forth
 
-[impressed] The pressure kept coming from both sides... [warm] but neither one was ready to give in.
+[impressed] Pressure from both sides... [warm] neither wanted to give in.
 
 # 2. Making Each Other Work
 
-[chuckle] They covered plenty of court in that rally... [impressed] and really had to earn that point.
+[chuckle] Plenty of court covered there... [impressed] they really earned that point.
 
 # 3. Patient Exchange
 
-[focused] Both sides stayed patient and kept it going... [impressed] waiting carefully for the right opening.
+[focused] Both sides stayed patient... [impressed] waiting for the right opening.
 
 # 4. Defence and Attack
 
-[excited] Attack turned into defence in a flash... then the roles changed again. [chuckle] What a rally.
+[excited] Attack became defence in a flash... [chuckle] what a rally!
 
 # 5. Refusing to Give Up
 
-[amused] That point looked finished more than once... [impressed] but somehow the shuttle kept coming back.
+[amused] That looked finished... [impressed] but the shuttle kept coming back.
 
 # 6. Physical Rally
 
-[focused] They covered almost every part of the court there... [softly] they'll definitely enjoy a short breather.
+[focused] Plenty of court covered there... [softly] they'll enjoy that breather.
 
 # 7. Quick Change
 
-[surprised] One side looked completely in control... [pause] then suddenly the pressure went the other way.
+[surprised] One side had control... then suddenly the pressure switched.
 
 # 8. Tactical
 
-[analytical] Neither side wanted to give away an easy opening... [impressed] really patient badminton from both.
+[analytical] Neither side gave much away... [impressed] really patient badminton.
 
 # 9. Fast Exchange
 
-[excited] Everything was coming back so quickly there... [emphasis] neither side had much time to reset.
+[excited] Everything came back quickly... [emphasis] hardly any time to reset.
 
 # 10. Slightly Funny
-[chuckle] I think {player1} and {player2} both decided the point wasn't allowed to finish yet. [pause] [amused] Back it came... and back it came again.
+
+[chuckle] That point refused to finish... [amused] back came the shuttle again.
+
+## with-players
 
 # 1. Building Pressure
-[focused] {player1} kept increasing the pressure, but {player2} wouldn't disappear from the rally. [emphasis] That made the final few shots much harder to earn.
+
+[focused] {player1} kept pressing... [impressed] but {player2} kept finding answers.
 
 # 2. Smooth Rally
-[warm] Nice control from {player1}, good response from {player2}... [pause] and the rally just developed naturally from there. [impressed] Really nice exchange.
+
+[warm] Nice control from {player1}... [impressed] good response from {player2}.
 
 # 3. Scrambling Rally
-[surprised] {player1} was stretched, then {player2} was stretched... [chuckle] nobody looked particularly comfortable for a moment there. [impressed] Somehow they kept it alive.
+
+[surprised] {player1} was stretched, then {player2}... [chuckle] somehow they survived.
 
 # 4. Momentum Changing
-[focused] First {player1} had the advantage, then {player2} took it away. [pause] Then it changed again. [chuckle] Not an easy point for either of them.
+
+[focused] {player1} had control... then {player2} turned it around.
 
 # 5. Replay-Friendly
-[impressed] Have a look at the work from both players here. {player1} keeps the pressure on, {player2} stays in the exchange... [pause] [warm] and that's what makes this one worth another look.
+
+[impressed] {player1} kept the pressure on... [warm] {player2} stayed in the rally.
 
 # 6. Casual Human
-[chuckle] {player1} really made {player2} work for that one. [pause] To be fair... [amused] {player2} wasn't making life particularly easy either.
+
+[chuckle] {player1} made {player2} work hard there... [amused] very hard.
 
 # 7. Long Exchange
-[focused] {player1} kept building the point, while {player2} kept extending it. [pause] [impressed] Neither side was willing to take the easy way out.
+
+[focused] {player1} kept pushing... [impressed] and {player2} kept it alive.
 
 # 8. Both Playing Well
-[warm] Some nice badminton between {player1} and {player2} there. [emphasis] Good movement, good recovery... [pause] and plenty of work before the point was finally settled.
+
+[warm] Nice badminton from {player1} and {player2}... [impressed] great exchange.
 
 # 9. Pressure Switching
-[excited] {player1} had {player2} under pressure... then suddenly {player1} was the one defending. [chuckle] A lot changed in just a few seconds.
+
+[excited] {player1} attacked... then suddenly {player2} turned the pressure around.
 
 # 10. Short & Natural
-[impressed] {player1} pushed, {player2} responded. [pause] Then they did it all over again. [chuckle] Neither was giving much away there.
+
+[impressed] {player1} pushed, {player2} responded... [chuckle] neither gave much away.

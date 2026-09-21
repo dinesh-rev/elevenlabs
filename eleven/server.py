@@ -24,8 +24,10 @@ what makes joined mp3 clips click at the seams.
 import argparse
 import queue
 import random
-import shutil
+import os
 import re
+import shutil
+import sys
 import threading
 import time
 import traceback
@@ -114,6 +116,46 @@ def resolved(raw, values):
 KEEP_CLIPS = 30      # how many finished clips to leave on disk
 
 
+SPEAKER = re.compile(r"^\s*([A-Za-z][A-Za-z'-]*)\s*:\s*(.+)$")
+
+
+def parse_turns(block):
+    """[(voice_id, text)] for a "Speaker: line" block, or [] if it is not one."""
+    turns = []
+    for line in block.split("\n"):
+        m = SPEAKER.match(line)
+        if m:
+            turns.append([core.voice_for(m.group(1)), m.group(2).strip()])
+        elif turns and line.strip():
+            turns[-1][1] += " " + line.strip()      # a turn wrapped onto two lines
+    return [tuple(t) for t in turns]
+
+
+def build_dialogue(block, label):
+    """Render a two-voice block whole. Returns the same report shape as build()."""
+    t0 = time.monotonic()
+    turns = parse_turns(block)
+    mp3, cached = core.render_dialogue(turns, dry=DRY)
+    chars = sum(len(t) for _, t in turns)
+    saved = None
+    if mp3 and label:
+        saved = AUDIO_DIR / f"clip_{label}_{uuid.uuid4().hex[:8]}.mp3"
+        tmp = saved.with_suffix(".mp3.part")
+        tmp.write_bytes(mp3)
+        os.replace(tmp, saved)
+        prune_clips()
+        if LOCAL_AUDIO:
+            JOBS.put(saved)
+    return {"pieces": [{"kind": "dialogue", "turns": len(turns), "cached": cached,
+                        "chars": chars}],
+            "synthesized_chars": 0 if cached else chars,
+            "reused_chars": chars if cached else 0,
+            "seconds": None,                # mp3 in, so no sample count to read
+            "saved_as": str(saved) if saved else None,
+            "url": f"/audio/{saved.name}" if saved else None,
+            "timings": {"total": round(time.monotonic() - t0, 2)}}
+
+
 def build(pieces, label):
     """Render every piece, join in order, save one clip. Returns a report.
 
@@ -144,10 +186,17 @@ def build(pieces, label):
         # a stable "most recent" name as well, for anything watching one file
         shutil.copyfile(saved, AUDIO_DIR / f"output_Audio1_{label}{saved.suffix}")
         prune_clips()
-        JOBS.put(saved)
+        if LOCAL_AUDIO:
+            JOBS.put(saved)
+    log.info("%s: %d pieces, render %.2fs, total %.2fs", label or "dry",
+             len(pieces), t_render, time.monotonic() - t_start)
     return {"pieces": detail, "synthesized_chars": made, "reused_chars": reused,
             "seconds": round(len(joined) / 2 / SAMPLE_RATE, 2),
-            "saved_as": str(saved) if saved else None}
+            "saved_as": str(saved) if saved else None,
+            # where the caller can fetch it, for when we do not play it here
+            "url": f"/audio/{saved.name}" if saved else None,
+            "timings": {"render": round(t_render, 2),
+                        "total": round(time.monotonic() - t_start, 2)}}
 
 
 def prune_clips():
@@ -201,7 +250,11 @@ def play():
 # Categories that have a richer section and a plain fallback. The value named
 # first decides which one is used, so a phrase never asks for data we lack.
 SECTIONS = {
-    "smash": ("player", "with-players", "no-players"),
+    # category: the value that decides, the rich section, the plain fallback.
+    # smash keys on {player} (the point winner); rally names both sides, so it
+    # keys on {player1}.
+    "smash": ("player",  "with-players", "no-players"),
+    "rally": ("player1", "with-players", "no-players"),
 }
 
 
@@ -276,7 +329,10 @@ def say_category(category):
     RECENT.append(raw)
     del RECENT[:-6]
     try:
-        report = build(split_phrase(raw, values), None if DRY else category)
+        if parse_turns(raw):          # "Rose: ..." -- two voices, rendered whole
+            report = build_dialogue(raw, None if DRY else category)
+        else:
+            report = build(split_phrase(raw, values), None if DRY else category)
     except Exception as e:
         return jsonify(error=readable(e), category=category), 502
     spoken = resolved(raw, values)
@@ -437,6 +493,16 @@ def main():
     ap.add_argument("--court", default=live.COURT, help='court to follow; "" for all')
     ap.add_argument("--key", default=live.TOURNAMENT_KEY)
     ap.add_argument("--dry", action="store_true", help="never call ElevenLabs")
+    ap.add_argument("--debug", action="store_true",
+                    help="log cache hits and per-piece timings")
+    ap.add_argument("--no-local-audio", action="store_true",
+                    help="do not play clips here; the caller plays the url")
+    ap.add_argument("--city", default="sydney",
+                    help="Australian venue: " + ", ".join(core.AU_CITIES))
+    ap.add_argument("--lat", type=float, help="venue latitude, overrides --city")
+    ap.add_argument("--lon", type=float, help="venue longitude, overrides --city")
+    ap.add_argument("--no-weather", action="store_true",
+                    help="do not poll for outdoor conditions")
     args = ap.parse_args()
     logging.basicConfig(
         level=logging.DEBUG if args.debug else logging.INFO,

@@ -1,50 +1,61 @@
-# 1. Casual Opener
-[calm] So, how are we feeling about this one?
-[chuckle] Because I have a feeling it is not going to be straightforward.
-[excited] These two never make it easy for themselves.
+# Two-voice dialogues: "Speaker: [tag] line". Rendering these properly needs
+# elevenlabs text_to_dialogue, which convo.py already uses -- the single-voice
+# path would read "Rose:" and "Jack:" aloud.
 
-# 2. Shared Disbelief
-[surprised] Did you see that?
-[laughs] I am still not entirely sure how that came back.
-[emphasis] That should have been the end of the rally.
-[chuckle] Apparently not.
+# 1. Close Game
+Rose: [curious] Jack, this is getting pretty tight... do you think we are heading to deuce?
+Jack: [thoughtful] It is starting to feel that way. [pause] Neither side looks ready to let this game go easily.
 
-# 3. Talking Tactics
-[calm] The interesting thing here is the change of pace.
-[emphasis] Slow, slow, and then suddenly everything happens at once.
-[impressed] It is clever badminton, that.
+# 2. Light Prediction
+Rose: [playful] I have got a feeling we might see deuce here.
+Jack: [chuckle] You are calling it already?
+Rose: [lightly] Not calling it... just preparing myself.
+Jack: [amused] Fair enough. At this score, I would keep that possibility open.
 
-# 4. Light Disagreement
-[chuckle] I thought that was going long, I will be honest.
-[amused] Clearly I was the only one.
-[impressed] Beautifully judged in the end.
+# 3. Pressure Building
+Rose: [focused] The closer this score gets, the more I am thinking twenty-all.
+Jack: [thoughtful] Same here. [pause] One good rally either way could change that, though.
+Rose: [warm] That is what makes this part of the game interesting.
 
-# 5. Building Anticipation
-[calm] This is the part of the match where it usually turns.
-[focused] One player finds a rhythm, the other starts chasing.
-[excited] And then it gets very interesting indeed.
+# 4. Friendly Disagreement
+Rose: [curious] Deuce?
+Jack: [confident] I am saying no.
+Rose: [surprised] Really?
+Jack: [chuckle] Somebody closes this before twenty-all.
+Rose: [playful] Alright... I am remembering that prediction.
 
-# 6. Comic Relief
-[chuckle] I am getting tired just watching this.
-[laughs] Goodness knows how they are still moving like that.
-[warm] Credit to both of them, honestly.
+# 5. Audience Involved
+Rose: [upbeat] Alright, Jack... and everyone watching, quick prediction. Do we get deuce in this game?
+Jack: [thoughtful] I would say there is a very good chance.
+Rose: [playful] I am leaning the same way. [pause] Let us see who gets this one right.
 
-# 7. Admiring Together
-[impressed] That is the shot of the match so far.
-[warm] No question about it.
-[emphasis] Everything about it was right, the timing, the angle, all of it.
+# 6. One Point Away
+Rose: [focused] We are getting dangerously close to deuce territory now.
+Jack: [amused] Dangerously close?
+Rose: [chuckle] You know what I mean. One or two rallies and suddenly nobody has an easy finish.
+Jack: [confident] Then the pressure really starts.
 
-# 8. Pressure Talk
-[focused] This is where the nerves usually show.
-[calm] A couple of loose shots, a couple of long rallies...
-[emphasis] and suddenly the whole thing feels different.
+# 7. Human / Casual
+Rose: [lightly] Jack, be honest... are you secretly hoping this goes to deuce?
+Jack: [chuckle] As a commentator? Absolutely.
+Rose: [laughs] I knew it.
+Jack: [playful] Close badminton makes our job much more interesting.
 
-# 9. Wrapping Up
-[warm] Well, that was thoroughly entertaining.
-[impressed] Long rallies, big smashes, and neither one giving anything away.
-[chuckle] I would happily watch that again.
+# 8. Momentum Question
+Rose: [thoughtful] If this does go to deuce, who do you think handles the pressure better?
+Jack: [focused] Hard to say right now. Both have had good moments.
+Rose: [curious] So you are avoiding the question?
+Jack: [chuckle] Professionally avoiding it, yes.
 
-# 10. Easy Banter
-[chuckle] I did say this one would be tricky.
-[amused] I am claiming that as a prediction, by the way.
-[excited] What a contest it turned out to be.
+# 9. Late Game Tension
+Rose: [softly] You can feel the tension starting to build now.
+Jack: [focused] Definitely. [pause] And if this reaches twenty-all, every rally becomes huge.
+Rose: [curious] Think we get there?
+Jack: [lightly] At the moment... I would not bet against it.
+
+# 10. Playful Finish
+Rose: [curious] Jack, deuce or no deuce?
+Jack: [confident] Deuce.
+Rose: [playful] Straight answer for once. I like it.
+Jack: [chuckle] Ask me again after the next rally and I might change my mind.
+Rose: [laughs] That sounds more like you.

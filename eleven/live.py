@@ -118,18 +118,32 @@ def read_frame(frame):
         "completed": bool(m.get("completed")),
         "winner": p1 if side == "A" else p2 if side == "B" else "",
         "confirmed": confirmed,
+        "updated_at": str(m.get("updatedAt") or ""),
         # passed through unused: if this ever flips mid-match it may mean the
         # board swapped sides, which would invert the A/B -> player1/2 mapping
         "swapped": bool(m.get("swapped")),
     }
 
 
-def write_players(record):
-    """Write the current names, numbered per side, replacing what was there."""
-    data = {"players": {
-        "team1": {str(i): n for i, n in enumerate(record["team1"], 1)},
-        "team2": {str(i): n for i, n in enumerate(record["team2"], 1)},
-    }}
+def write_players(record, raw=None):
+    """Write the current match, replacing what was there.
+
+    Three parts: the names in the shape the trigger config wants, the parsed
+    match fields, and the feed's own object untouched, so nothing is lost if
+    a field turns out to matter later.
+    """
+    data = {
+        "players": {
+            "team1": {str(i): n for i, n in enumerate(record["team1"], 1)},
+            "team2": {str(i): n for i, n in enumerate(record["team2"], 1)},
+        },
+        "match": {k: record[k] for k in (
+            "court", "court_name", "match_id", "player1", "player2",
+            "score1", "score2", "games1", "games2", "set_no",
+            "status", "completed", "winner", "confirmed", "swapped",
+            "country1", "country2", "updated_at")},
+        "raw": raw or {},
+    }
     PLAYERS_FILE.parent.mkdir(parents=True, exist_ok=True)
     tmp = PLAYERS_FILE.with_suffix(".json.part")
     tmp.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
@@ -167,7 +181,8 @@ async def listen(key=TOURNAMENT_KEY, on_change=None, log=True):
                         if record and record != COURTS.get(record["court"]):
                             COURTS[record["court"]] = record
                             if record["confirmed"]:
-                                write_players(record)   # unconfirmed never persisted
+                                # unconfirmed names are never persisted
+                                write_players(record, frame.get("match"))
                             print("court {court}: {player1} {score1} - {score2}"
                                   " {player2}  (games {games1}-{games2}, set"
                                   " {set_no}, {status}"
