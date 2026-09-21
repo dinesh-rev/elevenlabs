@@ -18,6 +18,7 @@ checked after a match.
 import argparse
 import asyncio
 import json
+import os
 import re
 import sys
 import threading
@@ -29,6 +30,10 @@ TOURNAMENT_KEY = "655"
 
 BASE_DIR = Path(__file__).resolve().parent
 LOG_DIR = BASE_DIR / "logs"
+# the current players, rewritten whenever the feed changes them. Other tools
+# read this instead of speaking HTTP, and the server can load it at startup
+# rather than waiting for the next point.
+PLAYERS_FILE = BASE_DIR / "configs" / "players.json"
 
 # One tournament subscription carries every court, so frames for other courts
 # arrive whether we want them or not and are dropped on arrival.
@@ -46,13 +51,13 @@ COUNTRY_CODES = {
     "SLO", "SRI", "SUI", "SWE", "THA", "TUR", "UKR", "USA", "VIE", "WAL",
 }
 
-def tidy_name(raw):
-    """'LOW H Y  / NG E C' -> 'Low H Y and Ng E C'.
+def split_names(raw):
+    """'LOW H Y  / NG E C' -> ['Low H Y', 'Ng E C'].
 
-    Doubles pairs arrive slash-separated; "and" reads better than "/" aloud.
+    A doubles pair arrives slash-separated; singles give a one-item list.
     """
     if not isinstance(raw, str):
-        return ""
+        return []
     people = []
     for part in raw.split("/"):
         part = re.sub(r"[\[(]\s*\d+\s*[\])]", " ", part)   # seeding marks
@@ -65,7 +70,12 @@ def tidy_name(raw):
             part = re.sub(r"[A-Za-z]+", lambda m: m.group(0).capitalize(), part)
         if part and re.search(r"[A-Za-z]", part):
             people.append(part)
-    return " and ".join(people)
+    return people
+
+
+def tidy_name(raw):
+    """The pair as one spoken string: "Low H Y and Ng E C"."""
+    return " and ".join(split_names(raw))
 
 
 def country_of(raw):
@@ -96,6 +106,9 @@ def read_frame(frame):
         "court_name": str(m.get("court", "")),
         "match_id": str(m.get("extMatchId", "")),
         "player1": p1, "player2": p2,
+        # the sides split into individual players, for players.json
+        "team1": split_names(m.get("t1_tabname")),
+        "team2": split_names(m.get("t2_tabname")),
         "country1": country_of(m.get("t1_tabname")),
         "country2": country_of(m.get("t2_tabname")),
         "score1": int(m.get("scoreA") or 0), "score2": int(m.get("scoreB") or 0),
@@ -109,6 +122,18 @@ def read_frame(frame):
         # board swapped sides, which would invert the A/B -> player1/2 mapping
         "swapped": bool(m.get("swapped")),
     }
+
+
+def write_players(record):
+    """Write the current names, numbered per side, replacing what was there."""
+    data = {"players": {
+        "team1": {str(i): n for i, n in enumerate(record["team1"], 1)},
+        "team2": {str(i): n for i, n in enumerate(record["team2"], 1)},
+    }}
+    PLAYERS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    tmp = PLAYERS_FILE.with_suffix(".json.part")
+    tmp.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+    os.replace(tmp, PLAYERS_FILE)      # so a reader never sees half a file
 
 
 async def listen(key=TOURNAMENT_KEY, on_change=None, log=True):
@@ -141,6 +166,8 @@ async def listen(key=TOURNAMENT_KEY, on_change=None, log=True):
                             continue  # another court on the same feed
                         if record and record != COURTS.get(record["court"]):
                             COURTS[record["court"]] = record
+                            if record["confirmed"]:
+                                write_players(record)   # unconfirmed never persisted
                             print("court {court}: {player1} {score1} - {score2}"
                                   " {player2}  (games {games1}-{games2}, set"
                                   " {set_no}, {status}"

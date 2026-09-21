@@ -11,6 +11,11 @@ side effect -- and keeping it self-contained means it still runs on its own.
 """
 import array
 import hashlib
+import json
+import logging
+import time
+import urllib.parse
+import urllib.request
 import os
 import re
 import shutil
@@ -20,13 +25,16 @@ import threading
 import wave
 from pathlib import Path
 
+log = logging.getLogger("commentary")
+
 BASE_DIR = Path(__file__).resolve().parent
 AUDIO_DIR = BASE_DIR / "configs" / "audio"
 
 VOICE_ID = "JBFqnCBsd6RMkjVDRZzb"   # George
 MODEL_ID = "eleven_v3"
 
-CATEGORIES = ["match_start", "rally", "smash", "highlights", "winners", "convo"]
+CATEGORIES = ["match_start", "rally", "smash", "highlights", "winners",
+              "convo", "weather"]
 
 # Audio is rendered as raw PCM rather than mp3 because PCM at one sample rate
 # joins by plain byte concatenation -- no ffmpeg, no re-encode, and none of the
@@ -151,7 +159,120 @@ def values_for(s):
         "country2": s["country2"],
         "country": s["country1"],
         "court": s["court"],
+        # weather.txt: the feed knows nothing about these, so they arrive as
+        # query parameters -- /say?category=weather&temperature=28C&condition=sunny
+        "temperature": "",
+        "condition": "",
+        "wind": "",
+        "high": "",          # today's maximum
+        "low": "",           # today's minimum
+        "rain_chance": "",
+        "outlook": "",       # tomorrow's conditions
     }
+
+
+# ---------------------------------------------------------------------------
+# outdoor conditions, for weather.txt
+#
+# The match feed knows nothing about weather, so this polls Open-Meteo, which
+# needs no API key. Values are phrased for speech, not for a dashboard --
+# "22 degrees" rather than "22.0C", because they are read aloud.
+# ---------------------------------------------------------------------------
+WEATHER_URL = "https://api.open-meteo.com/v1/forecast"
+
+# WMO codes, worded to drop into a sentence: "It is 22 degrees and <condition>."
+WEATHER_CODES = {
+    0: "clear and sunny", 1: "mostly clear", 2: "partly cloudy", 3: "overcast",
+    45: "foggy", 48: "foggy",
+    51: "drizzling lightly", 53: "drizzling", 55: "drizzling heavily",
+    56: "freezing drizzle", 57: "freezing drizzle",
+    61: "raining lightly", 63: "raining", 65: "raining heavily",
+    66: "freezing rain", 67: "freezing rain",
+    71: "snowing lightly", 73: "snowing", 75: "snowing heavily", 77: "snowing",
+    80: "showery", 81: "showery", 82: "heavy showers",
+    85: "snow showers", 86: "snow showers",
+    95: "thundery", 96: "thundery with hail", 99: "thundery with hail",
+}
+
+# Australian venues, so the location can be given by name rather than degrees.
+AU_CITIES = {
+    "sydney": (-33.87, 151.21), "melbourne": (-37.81, 144.96),
+    "brisbane": (-27.47, 153.03), "perth": (-31.95, 115.86),
+    "adelaide": (-34.93, 138.60), "canberra": (-35.28, 149.13),
+    "gold-coast": (-28.02, 153.40), "newcastle": (-32.93, 151.78),
+    "wollongong": (-34.42, 150.89), "geelong": (-38.15, 144.36),
+    "hobart": (-42.88, 147.33), "darwin": (-12.46, 130.84),
+    "cairns": (-16.92, 145.77), "townsville": (-19.26, 146.82),
+    "ballarat": (-37.56, 143.85), "bendigo": (-36.76, 144.28),
+}
+
+_weather_lock = threading.Lock()
+_weather = {"temperature": "", "condition": "", "wind": "", "humidity": "",
+            "high": "", "low": "", "rain_chance": "", "outlook": "",
+            "place": "", "updated_at": ""}
+
+
+def fetch_weather(lat, lon, timeout=10):
+    """One reading, phrased for speech. Raises on network or parse failure."""
+    query = urllib.parse.urlencode({
+        "latitude": lat, "longitude": lon, "timezone": "auto", "forecast_days": 2,
+        "current": "temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m",
+        # BOM's ACCESS model returns nulls through this API, so the default
+        # blend is used -- it already includes BOM data over Australia.
+        "daily": "temperature_2m_max,temperature_2m_min,"
+                 "precipitation_probability_max,weather_code",
+    })
+    with urllib.request.urlopen(f"{WEATHER_URL}?{query}", timeout=timeout) as r:
+        data = json.load(r)
+    now = data.get("current") or {}
+    day = data.get("daily") or {}
+
+    def first(key, index=0):
+        values = day.get(key) or []
+        return values[index] if len(values) > index else None
+
+    temp, wind = now.get("temperature_2m"), now.get("wind_speed_10m")
+    humid = now.get("relative_humidity_2m")
+    high, low = first("temperature_2m_max"), first("temperature_2m_min")
+    rain, tomorrow = first("precipitation_probability_max"), first("weather_code", 1)
+    return {
+        "temperature": f"{round(temp)} degrees" if temp is not None else "",
+        "condition": WEATHER_CODES.get(now.get("weather_code"), ""),
+        "wind": f"{round(wind)} kilometres an hour" if wind is not None else "",
+        "humidity": f"{humid} percent" if humid is not None else "",
+        "high": f"{round(high)} degrees" if high is not None else "",
+        "low": f"{round(low)} degrees" if low is not None else "",
+        "rain_chance": f"{rain} percent" if rain is not None else "",
+        "outlook": WEATHER_CODES.get(tomorrow, ""),      # tomorrow
+        "place": data.get("timezone", ""),
+        "updated_at": now.get("time", ""),
+    }
+
+
+def weather_now():
+    """The most recent reading. Empty strings until the first fetch lands."""
+    with _weather_lock:
+        return dict(_weather)
+
+
+def start_weather(lat, lon, minutes=15):
+    """Refresh in the background. Conditions move slowly; 15 minutes is plenty."""
+    def loop():
+        while True:
+            try:
+                reading = fetch_weather(lat, lon)
+                with _weather_lock:
+                    _weather.update(reading)
+                log.info("weather: %s, %s, wind %s (%s)", reading["temperature"],
+                         reading["condition"], reading["wind"], reading["place"])
+            except Exception as e:
+                # a missed reading is not worth failing over; the old one stands
+                log.warning("weather fetch failed (%s: %s)", type(e).__name__, e)
+            time.sleep(minutes * 60)
+
+    t = threading.Thread(target=loop, daemon=True, name="weather")
+    t.start()
+    return t
 
 
 # ---------------------------------------------------------------------------
@@ -192,18 +313,27 @@ def render_pcm(text, dry=False):
     """(pcm_bytes, was_cached). Only calls the API when not already on disk."""
     path = piece_path(text)
     if path.exists():
+        log.debug("cache hit  %4d chars  %r", len(text), text[:40])
         return path.read_bytes(), True
     if dry:
         return b"", False
+    t0 = time.monotonic()
     audio = client().text_to_speech.convert(
         text=text, voice_id=VOICE_ID, model_id=MODEL_ID,
         output_format=PCM_FORMAT, voice_settings=voice_settings())
-    pcm = trim_silence(b"".join(audio))   # buffer first: it can fail mid-stream
+    raw = b"".join(audio)                 # buffer first: it can fail mid-stream
+    api = time.monotonic() - t0
+    pcm = trim_silence(raw)
     PIECES_DIR.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".pcm.part")
     tmp.write_bytes(pcm)
     os.replace(tmp, path)
-    print(f"[render] {len(text):4} chars  {text[:50]!r}", flush=True)
+    secs = len(pcm) / 2 / SAMPLE_RATE
+    # chars/s and the ratio of wall time to audio produced are the two numbers
+    # that say whether the model or the text length is the problem
+    log.info("render %4d chars -> %5.2fs audio in %5.2fs  (%.0f chars/s, %.2fx)",
+             len(text), secs, api, len(text) / api if api else 0,
+             api / secs if secs else 0)
     return pcm, False
 
 

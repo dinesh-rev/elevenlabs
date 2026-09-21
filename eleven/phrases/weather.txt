@@ -1,0 +1,55 @@
+# General Weather-Style Badminton Commentary:
+
+# 1
+[upbeat] Conditions outside are looking good today... [excited] and inside, we're ready for some fantastic badminton.
+
+# 2
+[warm] It's a pleasant day around the venue... [upbeat] and the atmosphere inside is building nicely.
+
+# 3
+[lightly] Things are looking comfortable outside... [excited] but all eyes are on the action here on court.
+
+# 4
+[welcoming] A nice day around the arena... [warm] and a great setting for some top-class badminton.
+
+# 5
+[upbeat] The conditions outside are calm and pleasant... [excited] and inside, the energy is starting to rise.
+
+# 6
+[warm] It's a lovely day around the venue... [impressed] and we're all set for another exciting match.
+
+# 7
+[lightly] Nothing too dramatic outside today... [chuckle] we'll save all the drama for the badminton.
+
+# 8
+[confident] Conditions around the venue are looking good... [excited] now let's get back to the action.
+
+# 9
+[welcoming] A pleasant atmosphere around the venue today... [upbeat] and plenty to look forward to on court.
+
+# 10
+[softly] Things are looking settled outside... [pause] [excited] but inside, the competition is just getting started.
+
+# 11
+[welcoming] Conditions around the venue today... [emphasis] {temperature}, and {condition}. [warm] A good day for it.
+
+# 12
+[upbeat] Outside the arena it's {condition}, sitting at {temperature}. [excited] Inside, we're ready to go.
+
+# 13
+[calm] Heading for a top of {high} today, currently {temperature}. [warm] Comfortable enough in the hall.
+
+# 14
+[lightly] {condition} out there, {temperature}, and a breeze of {wind}. [chuckle] None of which troubles us in here.
+
+# 15
+[confident] A high of {high} expected, down to {low} overnight. [excited] But the action is all indoors.
+
+# 16
+[warm] {rain_chance} chance of rain today. [lightly] Not that the shuttle minds either way.
+
+# 17
+[welcoming] Today it's {condition} and {temperature}... [confident] and looking ahead, tomorrow is {outlook}.
+
+# 18
+[upbeat] {temperature} outside, topping out at {high}. [excited] Plenty of badminton to keep us busy.

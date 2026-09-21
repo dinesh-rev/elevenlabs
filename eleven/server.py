@@ -27,6 +27,7 @@ import random
 import shutil
 import re
 import threading
+import time
 import traceback
 import uuid
 
@@ -35,8 +36,10 @@ from werkzeug.exceptions import HTTPException
 
 import core
 import live
+import logging
 from core import BASE_DIR, CATEGORIES, AUDIO_DIR, PLACEHOLDER, SAMPLE_RATE
 
+log = logging.getLogger("commentary")
 app = Flask(__name__)
 TAG = re.compile(r"\[[a-z ]+\]")
 
@@ -114,16 +117,22 @@ def build(pieces, label):
     overwritten by a second request arriving while the first is still queued,
     losing one clip and playing the other twice.
     """
+    t_start = time.monotonic()
     audio, detail, made, reused = [], [], 0, 0
     for kind, text in pieces:
+        t0 = time.monotonic()
         pcm, cached = core.render_pcm(text, dry=DRY)
+        took = round(time.monotonic() - t0, 2)
         audio.append(pcm)
-        detail.append({"kind": kind, "text": text, "cached": cached})
+        detail.append({"kind": kind, "text": text, "cached": cached,
+                       "chars": len(text), "seconds": took})
         if cached:
             reused += len(text)
         else:
             made += len(text)
+    t_render = time.monotonic() - t_start
     joined = b"".join(audio)          # same rate and channels, so this is it
+    t0 = time.monotonic()
     saved = None
     if joined and label:
         saved = core.save_clip(
@@ -132,9 +141,18 @@ def build(pieces, label):
         shutil.copyfile(saved, AUDIO_DIR / f"output_Audio1_{label}{saved.suffix}")
         prune_clips()
         JOBS.put(saved)
+    t_save = time.monotonic() - t0
+    # pieces render one after another, so render time is their sum -- the
+    # single biggest number here, and the one parallelism would collapse
+    log.info("%s: %d pieces, render %.2fs, encode+save %.2fs, total %.2fs",
+             label or "dry", len(pieces), t_render, t_save,
+             time.monotonic() - t_start)
     return {"pieces": detail, "synthesized_chars": made, "reused_chars": reused,
             "seconds": round(len(joined) / 2 / SAMPLE_RATE, 2),
-            "saved_as": str(saved) if saved else None}
+            "saved_as": str(saved) if saved else None,
+            # so latency can be measured from the client, not just the log
+            "timings": {"render": round(t_render, 2), "save": round(t_save, 2),
+                        "total": round(time.monotonic() - t_start, 2)}}
 
 
 def prune_clips():
@@ -185,6 +203,13 @@ def play():
 # ---------------------------------------------------------------------------
 # 2. it picks from your phrase files, using the live match
 # ---------------------------------------------------------------------------
+# Categories that have a richer section and a plain fallback. The value named
+# first decides which one is used, so a phrase never asks for data we lack.
+SECTIONS = {
+    "smash": ("player", "with-players", "no-players"),
+}
+
+
 def pick_raw(category, section, values):
     """A random block, placeholders intact, whose names we actually have."""
     blocks = core.load_phrases(category, section)
@@ -238,12 +263,17 @@ def say_category(category):
         given = request.values.get(key)
         if given and not (key == "player" and chosen.upper() in ("A", "1", "B", "2")):
             values[key] = given.strip()
+    # whatever the request did not give, the live conditions may supply
+    for key, value in core.weather_now().items():
+        if key in values and not values[key] and value:
+            values[key] = value
     section = request.values.get("section")
-    if category == "smash" and section is None:
-        section = "with-players" if values["player"] else "no-players"
+    if section is None and category in SECTIONS:
+        key, rich, plain = SECTIONS[category]
+        section = rich if values.get(key) else plain
     raw = pick_raw(category, section, values)
-    if raw is None and category == "smash":
-        raw = pick_raw(category, "no-players", values)
+    if raw is None and category in SECTIONS:
+        raw = pick_raw(category, SECTIONS[category][2], values)   # plain fallback
     if raw is None:
         return jsonify(error=f"no usable {category} phrase without player names",
                        hint="the feed has not confirmed names for this court yet",
@@ -302,6 +332,7 @@ def index():
             "                              put {name} in text to place the name\n"
             f"GET /<category>               shortcut: {', '.join(CATEGORIES)}\n"
             "GET /state                    current match\n"
+            "GET /conditions               outdoor weather being spoken from\n"
             "GET /pieces                   how many pieces are cached\n"
             "GET /warm                     cost of pre-rendering every phrase\n"
             "GET /warm?confirm=1           actually pre-render them\n"
@@ -329,6 +360,16 @@ def ui():
     """The operator panel. Served from here so it can call the API directly."""
     return (BASE_DIR / "ui.html").read_text(encoding="utf-8"), 200, \
            {"Content-Type": "text/html; charset=utf-8"}
+
+
+@app.get("/conditions")
+def conditions():
+    """The outdoor conditions weather.txt speaks from.
+
+    Named /conditions rather than /weather because /weather is the shortcut
+    that speaks a weather line.
+    """
+    return jsonify(core.weather_now())
 
 
 @app.get("/state")
@@ -401,13 +442,31 @@ def main():
     ap.add_argument("--court", default=live.COURT, help='court to follow; "" for all')
     ap.add_argument("--key", default=live.TOURNAMENT_KEY)
     ap.add_argument("--dry", action="store_true", help="never call ElevenLabs")
+    ap.add_argument("--debug", action="store_true",
+                    help="log cache hits and per-piece timings")
+    ap.add_argument("--city", default="sydney",
+                    help="Australian venue: " + ", ".join(core.AU_CITIES))
+    ap.add_argument("--lat", type=float, help="venue latitude, overrides --city")
+    ap.add_argument("--lon", type=float, help="venue longitude, overrides --city")
+    ap.add_argument("--no-weather", action="store_true",
+                    help="do not poll for outdoor conditions")
     args = ap.parse_args()
+    logging.basicConfig(
+        level=logging.DEBUG if args.debug else logging.INFO,
+        format="%(asctime)s %(levelname)-5s %(message)s", datefmt="%H:%M:%S")
     DRY = args.dry
     live.COURT = args.court
 
     AUDIO_DIR.mkdir(parents=True, exist_ok=True)
     threading.Thread(target=speaker, daemon=True, name="speaker").start()
     live.start(key=args.key, on_change=STATE.update)
+    if not args.no_weather:
+        if args.lat is None or args.lon is None:
+            if args.city not in core.AU_CITIES:
+                sys.exit(f"unknown city {args.city!r}; "
+                         f"one of: {', '.join(core.AU_CITIES)}")
+            args.lat, args.lon = core.AU_CITIES[args.city]
+        core.start_weather(args.lat, args.lon)
 
     print(f"commentary server on http://{args.host}:{args.port}"
           f"  court={args.court or 'all'}{'  DRY RUN' if DRY else ''}", flush=True)
