@@ -1,3 +1,4 @@
+## no-players
 [calm] Here we go then, we are underway.
 
 [calm] Both players looking focused as this one begins.
@@ -5,6 +6,7 @@
 [excited] And we're off! This should be a good one.
 
 # 1. Clean Broadcast
+## with-players
 [welcoming] We’re ready for another match here today. [emphasis] {player1} of {country1} takes on {player2} of {country2} on Court {court_no}. [pause] [confident] This is match number {match_no} of the day... and we’re all set to get underway.
 
 # 2. More Energetic
@@ -19,24 +21,17 @@
 # 5. Premium / Broadcast Feel
 [welcoming] We’re heading over to Court {court_no} for the next match. [emphasis] Representing {country1}, we have {player1}... and across the court, {player2} from {country2}. [pause] [confident] This is match number {match_no} of the day. [excited] Let’s get into it.
 
-Match start Rest 5 
+# 6. Straight Into It
+[upbeat] Alright, we’re ready to go on Court {court_no}. [emphasis] {player1} from {country1} faces {player2} representing {country2}. [pause] This is match number {match_no} of the day. [confident] Let’s get into it.
 
-### 6. Straight Into It
+# 7. Calm & Professional
+[warm] The players are on court and we’re nearly ready to begin. [emphasis] It’s {player1} of {country1} against {player2} from {country2}, here on Court {court_no}. [pause] [focused] Match number {match_no} on today’s schedule.
 
-"[upbeat] Alright, we’re ready to go on Court {court_no}. [emphasis] {player1} from {country1} faces {player2} representing {country2}. [pause] This is match number {match_no} of the day. [confident] Let’s get into it."
+# 8. Face-Off Feel
+[excited] Here comes our next match on Court {court_no}. [emphasis] {player1}, flying the flag for {country1}, goes up against {player2} from {country2}. [pause] [confident] It’s match number {match_no} of the day... and we’re ready for the first serve.
 
-### 7. Calm & Professional
+# 9. More Human / Casual
+[lightly] Time for another one. [warm] On Court {court_no}, we’ve got {player1} from {country1} taking on {player2} of {country2}. [pause] That makes this match number {match_no} today. [upbeat] Both are ready, so here we go.
 
-"[warm] The players are on court and we’re nearly ready to begin. [emphasis] It’s {player1} of {country1} against {player2} from {country2}, here on Court {court_no}. [pause] [focused] Match number {match_no} on today’s schedule."
-
-### 8. Face-Off Feel
-
-"[excited] Here comes our next match on Court {court_no}. [emphasis] {player1}, flying the flag for {country1}, goes up against {player2} from {country2}. [pause] [confident] It’s match number {match_no} of the day... and we’re ready for the first serve."
-
-### 9. More Human / Casual
-
-"[lightly] Time for another one. [warm] On Court {court_no}, we’ve got {player1} from {country1} taking on {player2} of {country2}. [pause] That makes this match number {match_no} today. [upbeat] Both are ready, so here we go."
-
-### 10. Bigger Match Introduction
-
-"[focused] Attention turns now to Court {court_no}. [emphasis] On one side, {player1} representing {country1}. [pause] Across the net, {player2} from {country2}. [excited] This is match number {match_no} of the day... and the next contest is about to begin."
+# 10. Bigger Match Introduction
+[focused] Attention turns now to Court {court_no}. [emphasis] On one side, {player1} representing {country1}. [pause] Across the net, {player2} from {country2}. [excited] This is match number {match_no} of the day... and the next contest is about to begin.

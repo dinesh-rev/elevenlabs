@@ -1,0 +1,29 @@
+# 1. Simple Voting Prompt
+[upbeat] It's time to have your say! [pause] [excited] Vote for the player who has impressed you the most. Simply scan the QR code on screen, or open the voting link in the description, choose your player, and submit your vote.
+
+# 2. Fan Favourite
+[warm] You've seen the rallies, the defence, and the big attacking shots. [pause] [excited] Now it's your turn to choose your favourite player. Scan the QR code on screen, or use the link in the description, select your player, and cast your vote.
+
+# 3. Quick Poll
+[energetic] Quick poll for everyone watching! [pause] [curious] Who are you backing right now? Scan the QR code, or open the link in the description, pick your player, and submit your vote.
+
+# 4. Best Performance
+[focused] We've seen some excellent badminton today. [pause] [confident] Now you get to decide who has delivered the standout performance. Scan the QR code on screen, or follow the link in the description, choose your player, and vote.
+
+# 5. Close Contest
+[excited] This could be a very close vote! [pause] [playful] Want to support your favourite player? Scan the QR code on screen, or tap the voting link in the description, make your selection, and submit your vote.
+
+# 6. Crowd Choice
+[energetic] Let's hear from the fans! [pause] [excited] Choose the player who gets your support today. Scan the QR code, or use the link in the description, select your choice, and cast your vote.
+
+# 7. Voting Open
+[upbeat] The player voting is now open! [pause] [excited] To take part, scan the QR code on screen or open the link in the description. Choose your favourite player, submit your vote, and let's see who the fans are backing.
+
+# 8. Voting Reminder
+[warm] Don't forget, you can still have your say. [pause] [encouraging] Scan the QR code on screen, or open the voting link in the description, select your player, and submit your vote before voting closes.
+
+# 9. Final Call
+[dramatic] Time is running out to cast your vote! [pause] [energetic] Scan the QR code now, or use the link in the description, choose your player, and lock in your vote before the poll closes.
+
+# 10. Short Version
+[upbeat] Who gets your vote? [pause] [excited] Scan the QR code on screen, or use the link in the description, choose your player, and submit your vote now.

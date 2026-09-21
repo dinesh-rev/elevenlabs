@@ -42,7 +42,7 @@ def voice_for(speaker):
     return VOICES.get(speaker.strip().lower(), VOICE_ID)
 
 CATEGORIES = ["match_start", "rally", "smash", "highlights", "winners",
-              "convo", "weather"]
+              "convo", "weather", "voting"]
 
 # Audio is rendered as raw PCM rather than mp3 because PCM at one sample rate
 # joins by plain byte concatenation -- no ffmpeg, no re-encode, and none of the
@@ -167,6 +167,10 @@ def values_for(s):
         "country2": s["country2"],
         "country": s["country1"],
         "court": s["court"],
+        "court_no": s["court"],     # match_start.txt spells it this way
+        # not in the feed at all: supply it with ?match_no=3 or the blocks
+        # that need it are skipped
+        "match_no": "",
         # weather.txt: the feed knows nothing about these, so they arrive as
         # query parameters -- /say?category=weather&temperature=28C&condition=sunny
         "temperature": "",

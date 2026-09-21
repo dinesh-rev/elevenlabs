@@ -255,6 +255,7 @@ SECTIONS = {
     # keys on {player1}.
     "smash": ("player",  "with-players", "no-players"),
     "rally": ("player1", "with-players", "no-players"),
+    "match_start": ("player1", "with-players", "no-players"),
 }
 
 
