@@ -42,7 +42,7 @@ def voice_for(speaker):
     return VOICES.get(speaker.strip().lower(), VOICE_ID)
 
 CATEGORIES = ["match_start", "rally", "smash", "highlights", "winners",
-              "convo", "weather", "voting"]
+              "convo", "weather", "voting", "analytics", "score"]
 
 # Audio is rendered as raw PCM rather than mp3 because PCM at one sample rate
 # joins by plain byte concatenation -- no ffmpeg, no re-encode, and none of the
@@ -104,6 +104,7 @@ BLANK = {
     "score1": 0, "score2": 0, "games1": 0, "games2": 0, "set_no": 0,
     "status": "", "completed": False, "winner": "", "confirmed": False,
     "swapped": False, "last_scorer": "",
+    "team1": [], "team2": [],      # the sides split into individual players
 }
 
 
@@ -163,19 +164,29 @@ def values_for(s):
         # name both players in one line
         "player1": s["player1"],
         "player2": s["player2"],
+        # as strings: the score is legitimately 0 at the start of a game, and
+        # a bare 0 would read as "missing" to pick_raw
+        "score1": str(s["score1"]),
+        "score2": str(s["score2"]),
+        # the same two sides under the names players.json uses. Separate keys,
+        # so player1/player2 are untouched and existing phrases are unaffected.
+        "team1": " and ".join(s.get("team1") or []) or s["player1"],
+        "team2": " and ".join(s.get("team2") or []) or s["player2"],
         "country1": s["country1"],
         "country2": s["country2"],
         "country": s["country1"],
         "court": s["court"],
         "court_no": s["court"],     # match_start.txt spells it this way
-        # not in the feed at all: supply it with ?match_no=3 or the blocks
-        # that need it are skipped
-        "match_no": "",
         # weather.txt: the feed knows nothing about these, so they arrive as
         # query parameters -- /say?category=weather&temperature=28C&condition=sunny
         "temperature": "",
         "condition": "",
         "wind": "",
+        # court map, from analytics.py
+        "team1_front_percent": "",
+        "team1_back_percent": "",
+        "team2_front_percent": "",
+        "team2_back_percent": "",
         "high": "",          # today's maximum
         "low": "",           # today's minimum
         "rain_chance": "",

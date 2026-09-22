@@ -1,0 +1,29 @@
+# 1
+[focused] The score now stands at {score1} for {player1}, and {score2} for {player2}.
+
+# 2
+[upbeat] {player1} is on {score1}, with {player2} on {score2}.
+
+# 3
+[calm] A quick score update — {player1} has {score1}, and {player2} has {score2}.
+
+# 4
+[focused] It's {score1} for {player1}, and {score2} for {player2}.
+
+# 5
+[warm] The scoreboard now shows {player1} on {score1}, and {player2} on {score2}.
+
+# 6
+[confident] {player1} moves to {score1}, while {player2} remains on {score2}.
+
+# 7
+[upbeat] That's {score1} for {player1}, with {player2} currently on {score2}.
+
+# 8
+[calm] Current score — {player1}, {score1}; {player2}, {score2}.
+
+# 9
+[focused] {player1} now has {score1}, and {player2} has {score2}.
+
+# 10
+[warm] Here's the latest score: {score1} for {player1}, {score2} for {player2}.

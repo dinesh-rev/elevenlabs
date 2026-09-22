@@ -36,6 +36,7 @@ import uuid
 from flask import Flask, request, jsonify, send_file
 from werkzeug.exceptions import HTTPException
 
+import analytics
 import core
 import live
 import logging
@@ -301,6 +302,9 @@ def say_category(category):
     # "player=A" or "player=B" picks a side of the live match; without it,
     # whoever won the last point is used, which is all the feed can tell us
     chosen = (request.values.get("player") or "").strip()
+    # which placeholders the caller named, as opposed to inherited from the
+    # live match -- the section is chosen on these alone
+    supplied = {"player"} if chosen else set()
     if chosen.upper() in ("A", "1"):
         values["player"] = s["player1"]
     elif chosen.upper() in ("B", "2"):
@@ -312,14 +316,22 @@ def say_category(category):
         given = request.values.get(key)
         if given and not (key == "player" and chosen.upper() in ("A", "1", "B", "2")):
             values[key] = given.strip()
-    # whatever the request did not give, the live conditions may supply
+            supplied.add(key)
+    # whatever the request did not give, the court map may supply
+    for key, value in analytics.current().items():
+        if key in values and not values[key] and value:
+            values[key] = value
+    # and then the live conditions
     for key, value in core.weather_now().items():
         if key in values and not values[key] and value:
             values[key] = value
     section = request.values.get("section")
     if section is None and category in SECTIONS:
+        # named lines only when the caller asks for them. A live match still
+        # fills the names, but it does not by itself switch the section --
+        # otherwise every call would silently become a per-player render.
         key, rich, plain = SECTIONS[category]
-        section = rich if values.get(key) else plain
+        section = rich if (key in supplied and values.get(key)) else plain
     raw = pick_raw(category, section, values)
     if raw is None and category in SECTIONS:
         raw = pick_raw(category, SECTIONS[category][2], values)   # plain fallback
