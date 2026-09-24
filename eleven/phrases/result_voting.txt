@@ -1,0 +1,31 @@
+# Latest Voting Update
+
+# 1. Latest Votes
+[excited] The latest votes are here! [pause] Take a look at how the prediction stands right now. [upbeat] Still confident in your choice? Have your say and back your pick.
+
+# 2. Result Update
+[confident] We’ve got the latest voting results. [pause] The viewers have made their choices so far. [warm] Check where things stand and decide who you’re backing from here.
+
+# 3. Fans Have Spoken
+[excited] The fans have spoken, and the latest result is on screen. [pause] But this match can still change quickly. [upbeat] Has anything changed your prediction?
+
+# 4. New Voting Picture
+[focused] Here’s the latest picture from the audience vote. [pause] Interesting to see where everyone stands right now. [upbeat] Take another look at the match and make your call.
+
+# 5. Previous Result
+[warm] The latest voting update is in, and you can see the current result. [pause] Still happy with your original choice? [excited] Or has the action changed your mind?
+
+# 6. Still Agree?
+[lightly] The latest votes are here, and the viewers have had their say. [pause] The question is, do you still agree? [excited] Make your choice and get involved.
+
+# 7. Things Can Change
+[excited] The latest voting result is now on screen. [pause] That’s how the audience sees it for the moment. [upbeat] But there’s still time for the picture to change.
+
+# 8. Audience Check
+[confident] Time for another look at the audience prediction. [pause] The latest result shows where the support stands. [warm] Now decide whether you’re staying with your pick.
+
+# 9. Your Choice Matters
+[excited] Here comes the latest voting update. [pause] Have a look at how everyone has voted so far. [upbeat] Agree with the crowd, or ready to make a different call?
+
+# 10. Prediction Update
+[warm] We’ve got a fresh update from the viewers. [pause] Check out the latest result and see where the predictions stand. [excited] Now, who are you backing to take it?

@@ -42,7 +42,8 @@ def voice_for(speaker):
     return VOICES.get(speaker.strip().lower(), VOICE_ID)
 
 CATEGORIES = ["match_start", "rally", "smash", "highlights", "winners",
-              "convo", "weather", "voting", "analytics", "score"]
+              "convo", "weather", "voting", "analytics", "score",
+              "result_voting", "player_heatmap"]
 
 # Audio is rendered as raw PCM rather than mp3 because PCM at one sample rate
 # joins by plain byte concatenation -- no ffmpeg, no re-encode, and none of the

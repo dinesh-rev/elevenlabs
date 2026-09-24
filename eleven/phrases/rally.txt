@@ -1,83 +1,64 @@
 ## no-players
 
 # 1. Back and Forth
-
-[impressed] Pressure from both sides... [warm] neither wanted to give in.
+[impressed] Pressure from both sides... [warm] neither gave in.
 
 # 2. Making Each Other Work
-
-[chuckle] Plenty of court covered there... [impressed] they really earned that point.
+[chuckle] Plenty of court covered there... [impressed] tough point.
 
 # 3. Patient Exchange
-
-[focused] Both sides stayed patient... [impressed] waiting for the right opening.
+[focused] Both sides stayed patient... [impressed] waiting for the opening.
 
 # 4. Defence and Attack
-
-[excited] Attack became defence in a flash... [chuckle] what a rally!
+[excited] Attack became defence instantly... [chuckle] what a rally!
 
 # 5. Refusing to Give Up
-
-[amused] That looked finished... [impressed] but the shuttle kept coming back.
+[amused] That looked finished... [impressed] but it came back again.
 
 # 6. Physical Rally
-
-[focused] Plenty of court covered there... [softly] they'll enjoy that breather.
+[focused] Plenty of court covered there... [softly] they'll need that breather.
 
 # 7. Quick Change
-
-[surprised] One side had control... then suddenly the pressure switched.
+[surprised] One side had control... then the pressure switched.
 
 # 8. Tactical
-
-[analytical] Neither side gave much away... [impressed] really patient badminton.
+[analytical] Neither side gave much away... [impressed] patient badminton.
 
 # 9. Fast Exchange
-
-[excited] Everything came back quickly... [emphasis] hardly any time to reset.
+[excited] Everything came back quickly... [emphasis] no time to reset.
 
 # 10. Slightly Funny
+[chuckle] That point refused to end... [amused] back it came again.
 
-[chuckle] That point refused to finish... [amused] back came the shuttle again.
 
 ## with-players
 
 # 1. Building Pressure
-
-[focused] {player1} kept pressing... [impressed] but {player2} kept finding answers.
+[focused] {player1} pressed... [impressed] {player2} kept finding answers.
 
 # 2. Smooth Rally
-
 [warm] Nice control from {player1}... [impressed] good response from {player2}.
 
 # 3. Scrambling Rally
-
-[surprised] {player1} was stretched, then {player2}... [chuckle] somehow they survived.
+[surprised] {player1} was stretched... [chuckle] {player2} survived it.
 
 # 4. Momentum Changing
-
 [focused] {player1} had control... then {player2} turned it around.
 
 # 5. Replay-Friendly
-
-[impressed] {player1} kept the pressure on... [warm] {player2} stayed in the rally.
+[impressed] {player1} kept pressing... [warm] {player2} stayed in it.
 
 # 6. Casual Human
-
-[chuckle] {player1} made {player2} work hard there... [amused] very hard.
+[chuckle] {player1} made {player2} work hard there.
 
 # 7. Long Exchange
-
-[focused] {player1} kept pushing... [impressed] and {player2} kept it alive.
+[focused] {player1} kept pushing... [impressed] {player2} kept it alive.
 
 # 8. Both Playing Well
-
-[warm] Nice badminton from {player1} and {player2}... [impressed] great exchange.
+[warm] Nice badminton from {player1} and {player2}. [impressed] Great exchange.
 
 # 9. Pressure Switching
+[excited] {player1} attacked... then {player2} turned the pressure around.
 
-[excited] {player1} attacked... then suddenly {player2} turned the pressure around.
-
-# 10. Short & Natural
-
-[impressed] {player1} pushed, {player2} responded... [chuckle] neither gave much away.
+# 10. Short and Natural
+[impressed] {player1} pushed, {player2} responded... [chuckle] neither gave in.

@@ -1,0 +1,31 @@
+# Player Heatmap
+
+# 1. Analytics Intro
+[analytical] Let’s take a look at the player analytics. [focused] The heatmap shows where most of the movement and court activity happened.
+
+# 2. Movement Analysis
+[analytical] Time for a quick look at the player movement. [focused] This heatmap highlights the areas used most during the match.
+
+# 3. Court Usage
+[analytical] Here’s a look at the player’s court analytics. [warm] The heatmap gives us a clear picture of how the court was used.
+
+# 4. Positioning View
+[focused] Let’s break down the player positioning. [analytical] The heatmap shows where the movement was most concentrated.
+
+# 5. Match Analytics
+[analytical] Here’s another look at the match analytics. [focused] This heatmap reveals the player’s main movement zones across the court.
+
+# 6. Tactical Insight
+[analytical] Let’s go into the player analytics for a moment. [focused] The heatmap gives us a useful view of positioning and court coverage.
+
+# 7. Activity Zones
+[focused] Here’s the player movement analysis. [analytical] The brighter areas show where most of the activity was concentrated.
+
+# 8. Court Coverage
+[analytical] Let’s look at the player’s court coverage. [focused] The heatmap gives a clear visual of the busiest areas.
+
+# 9. Movement Story
+[analytical] The player analytics tell an interesting story here. [focused] This heatmap shows how movement was distributed across the court.
+
+# 10. Broadcast Style
+[confident] Let’s bring up the player analytics. [analytical] The heatmap gives us a clear look at movement, positioning, and overall court usage.
