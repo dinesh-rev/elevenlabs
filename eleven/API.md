@@ -33,7 +33,7 @@ curl "localhost:8080/say?category=smash"        # canonical
 
 | Category | Blocks | Placeholders it uses |
 |---|---|---|
-| `match_start` | 14 | `player1` `player2` `country1` `country2` `court_no`* `match_no`* |
+| `match_start` | 20 | `player1` `player2` `country1` `country2` `court_no` |
 | `rally` | 20 | `player1` `player2` |
 | `smash` | 20 | `player` |
 | `highlights` | 20 | none |
@@ -41,8 +41,8 @@ curl "localhost:8080/say?category=smash"        # canonical
 | `convo` | 10 | none — **two voices**, rendered whole |
 | `weather` | 18 | `temperature` `condition` `wind` `high` `low` `rain_chance` `outlook` |
 | `voting` | 10 | none |
-
-\* `court_no` and `match_no` have no source, so blocks using them can never be selected.
+| `analytics` | 10 | `team1` `team2` `team1_front_percent` `team1_back_percent` `team2_front_percent` `team2_back_percent` |
+| `score` | 10 | `player1` `player2` `score1` `score2` |
 
 ## Parameters
 
@@ -57,6 +57,8 @@ curl "localhost:8080/say?category=smash&player=Heena"      # a literal name
 curl "localhost:8080/say?category=rally&player1=X&player2=Y"
 curl "localhost:8080/say?category=winners&winner=X&opponent=Y"
 curl "localhost:8080/say?category=weather&temperature=31%20degrees"
+curl "localhost:8080/say?category=score&score1=18&score2=21"
+curl "localhost:8080/say?category=analytics&team1=Kannama&team2=Akmal"
 ```
 
 `player=A|B|1|2` selects a side of the live match. Any other value is used as
@@ -69,8 +71,10 @@ curl "localhost:8080/say?category=smash&section=no-players"
 curl "localhost:8080/say?category=rally&section=with-players"
 ```
 
-Without it, `smash` and `rally` choose `with-players` when a name is known and
-`no-players` when it is not.
+Without it the plain section is used. `smash`, `rally` and `match_start` switch
+to their named section only when you ask for a name -- with `player=`,
+`player1=`, `player2=`, `team1=` or `team2=` -- so a live match on court does
+not by itself turn every call into a per-player render.
 
 ## Speak your own words
 
@@ -89,6 +93,7 @@ name is spoken at the end.
 | `/` | GET | plain-text help |
 | `/health` | GET | `{"ok": true, "queued": n, "dry_run": bool}` |
 | `/state` | GET | the live match from the websocket |
+| `/categories` | GET | the category list, which the panel reads |
 | `/conditions` | GET | the outdoor weather being spoken from |
 | `/pieces` | GET | how many audio pieces are cached |
 | `/warm` | GET/POST | what pre-rendering every phrase would cost |

@@ -5,11 +5,11 @@ The analytics system writes a JSON file of court regions as percentages:
     {"r1": 7.69, "r2": 15.39, "r3": 30.77,
      "r4": 7.69, "r5": 15.38, "r6": 23.08}
 
-The six regions are folded into front and back for each side. Values come back
-as strings phrased for speech -- "54", not 53.85 -- because they are read aloud.
+The six regions are folded into front and back for each side. Values are the
+file's own percentages, rounded for speech: 7.69 is read as "8".
 
     import analytics
-    analytics.current()    # {"team1_front_percent": "14", ...}
+    analytics.current()    # {"team1_front_percent": "8", ...}
 
 Empty strings when there is no data, which makes the phrases needing them
 unselectable rather than speaking a blank.
@@ -25,8 +25,7 @@ PATTERN = "*region_percentages*.json"
 #
 # ASSUMPTION, and the one thing to confirm with the analytics side: r1-r3 are
 # team 1's half running front to back, r4-r6 team 2's. This table is the only
-# place it is written down, so correcting it is a four-line edit -- and having
-# it backwards would put a confidently wrong read on air.
+# place it is written down, so correcting it is a four-line edit.
 ZONES = {
     "team1_front_percent": ("r1",),
     "team1_back_percent": ("r2", "r3"),
@@ -36,41 +35,47 @@ ZONES = {
 
 BLANK = {k: "" for k in ZONES}
 
-
 def load(path=None):
     """The raw JSON, or {} if it is missing or unreadable."""
     if path is None:
-        found = sorted(glob.glob(str(CONFIG_DIR / PATTERN)))
-        path = found[-1] if found else None
+        found = glob.glob(str(CONFIG_DIR / PATTERN))
+        # newest by modification time: sorting by name puts match_9 after
+        # match_10, which would read yesterday's court map as today's
+        path = max(found, key=lambda f: Path(f).stat().st_mtime) if found else None
     try:
         return json.loads(Path(path).read_text(encoding="utf-8"))
     except (TypeError, OSError, json.JSONDecodeError):
         return {}
 
 
+def number(value):
+    """A float, or 0.0 for anything that is not plainly one."""
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def current(path=None):
-    """Speech-ready per-side percentages for analytics.txt."""
+    """Speech-ready per-side percentages for analytics.txt.
+
+    Never raises: this is called on every request for every category, so a
+    half-written or malformed court map has to mean no analytics, not no
+    commentary at all.
+    """
     data = load(path)
-    if not data:
+    if not isinstance(data, dict) or not data:
         return dict(BLANK)
 
-    raw = {k: sum(float(data.get(r, 0)) for r in regions)
+    raw = {k: sum(number(data.get(r)) for r in regions)
            for k, regions in ZONES.items()}
     if not any(raw.values()):                   # already folded upstream?
-        raw = {k: float(data.get(k, 0)) for k in ZONES}
-
-    out = {}
-    for team in ("team1", "team2"):
-        front = raw[f"{team}_front_percent"]
-        back = raw[f"{team}_back_percent"]
-        total = front + back
-        if total <= 0:
-            return dict(BLANK)
-        # out of that side's own activity, so each pair adds up to 100 and
-        # reads correctly however the file is scaled
-        out[f"{team}_front_percent"] = str(round(front / total * 100))
-        out[f"{team}_back_percent"] = str(round(back / total * 100))
-    return out
+        raw = {k: number(data.get(k)) for k in ZONES}
+    if sum(raw.values()) <= 0:
+        return dict(BLANK)
+    # the file's own percentages, rounded to whole numbers for speech, so
+    # 7.69 is read as "8 percent"
+    return {k: str(round(v)) for k, v in raw.items()}
 
 
 if __name__ == "__main__":

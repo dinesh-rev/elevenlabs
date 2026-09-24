@@ -40,6 +40,36 @@
 
 [excited] We've got to see that again! [impressed] Brilliant smash and sharp finish.
 
+# 11. One Second Opening
+[excited] The opening appeared for just a second... [pause] [impressed] and that smash made absolutely sure it counted.
+
+# 12. No Second Chance
+[surprised] That came down in a hurry! [pause] [excited] Clean contact, plenty of power, and no second chance needed.
+
+# 13. Patient Build-Up
+[impressed] Patient build-up, then suddenly the attack arrived... [pause] [emphasis] and the shuttle went straight down.
+
+# 14. No Hesitation
+[excited] There was the chance... and bang! [pause] [impressed] No hesitation at all, just a really clean attacking finish.
+
+# 15. Changed Quickly
+[surprised] That changed quickly! [pause] One moment the rally was building... [excited] the next, the shuttle was on the floor.
+
+# 16. Pressure Told
+[focused] The pressure kept building until the opening appeared... [pause] [impressed] and the smash finished it perfectly.
+
+# 17. Ended Rather Quickly
+[chuckle] Well, that ended rather quickly! [pause] [excited] One clean swing, plenty of pace, and the rally was done.
+
+# 18. Everything Lined Up
+[impressed] Everything lined up nicely there... [pause] [emphasis] good timing, a sharp angle, and a very tidy finish.
+
+# 19. Sat Up Just Enough
+[excited] The shuttle sat up just enough... [pause] [surprised] and that was all the invitation needed for the finish.
+
+# 20. Nicely Worked
+[warm] That was nicely worked. [pause] [impressed] Wait for the opening, step in at the right time... and finish with power.
+
 ## with-players
 
 # 1. Funny

@@ -108,6 +108,13 @@ BLANK = {
 }
 
 
+# Everything that names a player. Held back until the feed confirms it, and
+# cleared when the match changes. team1/team2 belong here too: values_for
+# prefers them, so leaving them out let an unconfirmed misread be spoken
+# through {team1} while {player1} was correctly withheld.
+NAME_KEYS = ("player1", "player2", "country1", "country2", "team1", "team2")
+
+
 class MatchState:
     """The match currently on court. update() is the live.py callback."""
 
@@ -123,8 +130,8 @@ class MatchState:
                 # New match on this court. The previous match's names would
                 # otherwise linger while the feed settles on the new ones,
                 # pairing old players with the new score.
-                for k in ("player1", "player2", "country1", "country2", "winner"):
-                    d[k] = ""
+                for k in NAME_KEYS + ("winner",):
+                    d[k] = [] if k in ("team1", "team2") else ""
                 d["last_scorer"] = ""
                 d["score1"] = d["score2"] = 0
             elif (record["score1"] == d["score1"] + 1
@@ -135,8 +142,7 @@ class MatchState:
                 d["last_scorer"] = "2"   # and decreases are the feed correcting
 
             for k, v in record.items():
-                if k in ("player1", "player2", "country1", "country2") \
-                        and not record["confirmed"]:
+                if k in NAME_KEYS and not record["confirmed"]:
                     continue   # an unconfirmed name must never be spoken
                 d[k] = v
 

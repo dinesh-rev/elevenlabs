@@ -87,13 +87,16 @@
 </div>
 
 <script>
-const CATS = ["match_start", "rally", "smash", "highlights", "winners", "convo"];
+// filled from the server, so a new phrase file needs no edit here
+let CATS = ["match_start", "rally", "smash", "highlights", "winners", "convo"];
 let category = "smash", player = "A", busy = false;
 
 const $ = id => document.getElementById(id);
 
 // category buttons
-CATS.forEach(c => {
+function drawCats() {
+  $("cats").innerHTML = "";
+  CATS.forEach(c => {
   const b = document.createElement("button");
   b.textContent = c.replace("_", " ");
   b.setAttribute("aria-pressed", c === category);
@@ -101,8 +104,19 @@ CATS.forEach(c => {
     category = c;
     [...$("cats").children].forEach(x => x.setAttribute("aria-pressed", x === b));
   };
-  $("cats").append(b);
-});
+    $("cats").append(b);
+  });
+}
+drawCats();
+
+// ask the server what categories it actually has
+fetch("/categories").then(r => r.json()).then(d => {
+  if (d.categories && d.categories.length) {
+    CATS = d.categories;
+    if (!CATS.includes(category)) category = CATS[0];
+    drawCats();
+  }
+}).catch(() => {});
 
 // player toggle
 $("players").onclick = e => {

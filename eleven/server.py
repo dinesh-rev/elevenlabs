@@ -331,7 +331,13 @@ def say_category(category):
         # fills the names, but it does not by itself switch the section --
         # otherwise every call would silently become a per-player render.
         key, rich, plain = SECTIONS[category]
-        section = rich if (key in supplied and values.get(key)) else plain
+        # Asking for a named line by any means counts, not only by this
+        # category's deciding key. rally and match_start decide on player1,
+        # which nothing sends -- the panel and the shortcut routes use
+        # player=A|B -- so without this their named halves are unreachable.
+        asked = bool(supplied & {key, "player", "player1", "player2",
+                                 "team1", "team2"})
+        section = rich if (asked and values.get(key)) else plain
     raw = pick_raw(category, section, values)
     if raw is None and category in SECTIONS:
         raw = pick_raw(category, SECTIONS[category][2], values)   # plain fallback
@@ -395,6 +401,7 @@ def index():
             "GET /play?text=...&name=...   speak words you supply\n"
             "                              put {name} in text to place the name\n"
             f"GET /<category>               shortcut: {', '.join(CATEGORIES)}\n"
+            "GET /categories               the category list, as JSON\n"
             "GET /state                    current match\n"
             "GET /conditions               outdoor weather being spoken from\n"
             "GET /pieces                   how many pieces are cached\n"
@@ -434,6 +441,12 @@ def conditions():
     that speaks a weather line.
     """
     return jsonify(core.weather_now())
+
+
+@app.get("/categories")
+def categories():
+    """What the panel builds its buttons from, so the two cannot drift."""
+    return jsonify(categories=CATEGORIES)
 
 
 @app.get("/state")
