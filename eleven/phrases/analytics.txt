@@ -1,29 +1,29 @@
 # 1. Side by Side
-[analytical] {team1} had {team1_front_percent} percent activity in front and {team1_back_percent} percent at the back. [pause] {team2} recorded {team2_front_percent} percent in front and {team2_back_percent} percent at the back.
+[analytical] {team1} had {team1_front_percent} percent activity in the attacking area and {team1_back_percent} percent in deeper positions. [pause] {team2} recorded {team2_front_percent} percent in the attacking area and {team2_back_percent} percent deeper.
 
 # 2. Clearer Picture
-[analytical] For {team1}, activity was {team1_front_percent} percent front court and {team1_back_percent} percent back court. [pause] {team2} showed {team2_front_percent} percent front and {team2_back_percent} percent back. [focused] A clear comparison.
+[analytical] For {team1}, activity was {team1_front_percent} percent in the attacking zone and {team1_back_percent} percent in deeper positions. [pause] {team2} showed {team2_front_percent} percent attacking and {team2_back_percent} percent deeper. [focused] A clear comparison.
 
 # 3. Deeper Positions
-[focused] {team1} recorded {team1_front_percent} percent at the front and {team1_back_percent} percent deeper. [pause] {team2} finished with {team2_front_percent} percent front court and {team2_back_percent} percent at the back.
+[focused] {team1} recorded {team1_front_percent} percent in advanced positions and {team1_back_percent} percent deeper. [pause] {team2} finished with {team2_front_percent} percent advanced and {team2_back_percent} percent deeper.
 
 # 4. Breaking It Down
-[analytical] {team1}'s court map shows {team1_front_percent} percent in front and {team1_back_percent} percent at the back. [pause] For {team2}, it's {team2_front_percent} percent front and {team2_back_percent} percent back.
+[analytical] {team1}'s court map shows {team1_front_percent} percent in the attacking area and {team1_back_percent} percent in deeper areas. [pause] For {team2}, it's {team2_front_percent} percent attacking and {team2_back_percent} percent deeper.
 
 # 5. Rally Pattern
-[analytical] {team1} used the front court {team1_front_percent} percent and the back {team1_back_percent} percent. [pause] {team2} recorded {team2_front_percent} percent front and {team2_back_percent} percent back. [focused] Interesting patterns.
+[analytical] {team1} used the attacking area {team1_front_percent} percent and deeper positions {team1_back_percent} percent. [pause] {team2} recorded {team2_front_percent} percent attacking and {team2_back_percent} percent deeper. [focused] Interesting patterns.
 
 # 6. Flow of the Match
-[focused] {team1}'s activity was {team1_front_percent} percent in front and {team1_back_percent} percent at the back. [pause] {team2} showed {team2_front_percent} percent front and {team2_back_percent} percent back.
+[focused] {team1}'s activity was {team1_front_percent} percent in advanced areas and {team1_back_percent} percent deeper. [pause] {team2} showed {team2_front_percent} percent advanced and {team2_back_percent} percent deeper.
 
 # 7. Both Sides
-[analytical] For {team1}, {team1_front_percent} percent of activity came in front, with {team1_back_percent} percent at the back. [pause] {team2} recorded {team2_front_percent} percent front and {team2_back_percent} percent back.
+[analytical] For {team1}, {team1_front_percent} percent of activity came in attacking positions, with {team1_back_percent} percent in deeper areas. [pause] {team2} recorded {team2_front_percent} percent attacking and {team2_back_percent} percent deeper.
 
 # 8. Final Court Activity
-[analytical] {team1} finished with {team1_front_percent} percent activity in front and {team1_back_percent} percent at the back. [pause] {team2} recorded {team2_front_percent} percent front and {team2_back_percent} percent back.
+[analytical] {team1} finished with {team1_front_percent} percent activity in attacking areas and {team1_back_percent} percent in deeper positions. [pause] {team2} recorded {team2_front_percent} percent attacking and {team2_back_percent} percent deeper.
 
 # 9. Court Usage
-[focused] {team1}'s court usage was {team1_front_percent} percent front and {team1_back_percent} percent back. [pause] {team2} finished at {team2_front_percent} percent front and {team2_back_percent} percent back. [analytical] A useful comparison.
+[focused] {team1}'s court usage was {team1_front_percent} percent in advanced positions and {team1_back_percent} percent deeper. [pause] {team2} finished at {team2_front_percent} percent advanced and {team2_back_percent} percent deeper. [analytical] A useful comparison.
 
 # 10. Final Look
-[analytical] One final look: {team1} recorded {team1_front_percent} percent in front and {team1_back_percent} percent at the back. [pause] {team2} showed {team2_front_percent} percent front and {team2_back_percent} percent back.
+[analytical] One final look: {team1} recorded {team1_front_percent} percent in attacking areas and {team1_back_percent} percent in deeper positions. [pause] {team2} showed {team2_front_percent} percent attacking and {team2_back_percent} percent deeper.
