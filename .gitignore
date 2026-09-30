@@ -8,3 +8,6 @@ eleven/configs/
 eleven/logs/
 eleven/test_api.sh
 eleven/.venv/
+eleven/icon.svg
+eleven/run_server.sh
+eleven/commentary-server.desktop
