@@ -22,7 +22,7 @@ import os
 import re
 import sys
 import threading
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 WS_URL = "wss://5a7amc2f17.execute-api.ap-south-1.amazonaws.com/prod"
@@ -153,6 +153,37 @@ def write_players(record, raw=None):
     tmp = PLAYERS_FILE.with_suffix(".json.part")
     tmp.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
     os.replace(tmp, PLAYERS_FILE)      # so a reader never sees half a file
+
+
+def read_players(max_age_hours=12):
+    """The last confirmed match from players.json, or None.
+
+    Lets a restart start with the names it had instead of waiting for the next
+    point -- the feed only speaks when a scoreboard changes, which can be
+    minutes. The saved match_id travels with them so the first frame can tell
+    whether they are still the right names.
+    """
+    try:
+        data = json.loads(PLAYERS_FILE.read_text(encoding="utf-8"))
+        match = data["match"]
+    except (OSError, ValueError, KeyError):
+        return None
+    if not match.get("confirmed") or not match.get("player1"):
+        return None
+    stamp = match.get("updated_at", "")
+    try:
+        age = datetime.now(timezone.utc) - datetime.fromisoformat(
+            stamp.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if age > timedelta(hours=max_age_hours):
+        # a tournament ago; better to say nothing than last week's finalists
+        return None
+    # the saved match block carries every field MatchState.update reads
+    record = dict(match)
+    record["team1"] = list(data["players"]["team1"].values())
+    record["team2"] = list(data["players"]["team2"].values())
+    return record
 
 
 async def listen(key=TOURNAMENT_KEY, on_change=None, log=True):

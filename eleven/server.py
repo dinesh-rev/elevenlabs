@@ -555,6 +555,13 @@ def main():
 
     AUDIO_DIR.mkdir(parents=True, exist_ok=True)
     threading.Thread(target=speaker, daemon=True, name="speaker").start()
+    # start with the names the last run confirmed, so a restart does not wait
+    # for the next point. The first frame corrects them if the match moved on.
+    restored = live.read_players()
+    if restored:
+        STATE.update(restored)
+        print(f"restored {restored['player1']} vs {restored['player2']}"
+              f" from {restored['match_id']}", flush=True)
     live.start(key=args.key, on_change=STATE.update)
     if not args.no_weather:
         if args.lat is None or args.lon is None:
