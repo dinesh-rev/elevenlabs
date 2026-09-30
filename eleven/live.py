@@ -26,7 +26,7 @@ from datetime import datetime
 from pathlib import Path
 
 WS_URL = "wss://5a7amc2f17.execute-api.ap-south-1.amazonaws.com/prod"
-TOURNAMENT_KEY = "655"
+TOURNAMENT_KEY = "131"
 
 BASE_DIR = Path(__file__).resolve().parent
 LOG_DIR = BASE_DIR / "logs"
@@ -38,8 +38,13 @@ PLAYERS_FILE = BASE_DIR / "configs" / "players.json"
 # One tournament subscription carries every court, so frames for other courts
 # arrive whether we want them or not and are dropped on arrival.
 # Set COURT = "" to follow all of them again (COURTS is keyed by court number).
-COURT = "2"
+COURT = "1"
 COURTS = {}  # court -> record, see read_frame() for the fields
+
+# So the difference between "no match on court" and "the socket is down" can
+# be seen from outside. Both look like empty state otherwise.
+STATUS = {"connected": False, "subscribed": "", "frames": 0,
+          "last_frame_at": "", "last_error": ""}
 
 # Names on a scoreboard are tailed with a country code. Matching a bare
 # [A-Z]{3} is not safe -- it eats real surnames like LEE, WEI or TAN.
@@ -166,11 +171,15 @@ async def listen(key=TOURNAMENT_KEY, on_change=None, log=True):
                 async with websockets.connect(WS_URL, ping_interval=20) as ws:
                     await ws.send(sub)
                     print(f"connected, subscribed to {key}", flush=True)
+                    STATUS.update(connected=True, subscribed=key, last_error="")
                     delay = 1
                     async for raw in ws:
                         if fh:
                             fh.write(raw + "\n")
                             fh.flush()
+                        STATUS["frames"] += 1
+                        STATUS["last_frame_at"] = datetime.now().isoformat(
+                            timespec="seconds")
                         try:
                             frame = json.loads(raw)
                         except json.JSONDecodeError:
@@ -196,6 +205,8 @@ async def listen(key=TOURNAMENT_KEY, on_change=None, log=True):
                 raise
             except Exception as e:
                 # API Gateway drops idle sockets at 10 min, so this is routine.
+                STATUS.update(connected=False,
+                              last_error=f"{type(e).__name__}: {e}")
                 print(f"reconnecting in {delay}s ({type(e).__name__}: {e})",
                       file=sys.stderr, flush=True)
                 await asyncio.sleep(delay)

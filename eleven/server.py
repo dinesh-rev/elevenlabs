@@ -132,6 +132,28 @@ def parse_turns(block):
     return [tuple(t) for t in turns]
 
 
+def phrase_pieces(categories=None):
+    """{text: category} for every reusable piece, i.e. those with no name.
+
+    One definition, used by /warm and by automation.py, so the cache warmer
+    can only ever render pieces a request actually looks up. Two copies of
+    this drifted once already.
+
+    Two-voice blocks are skipped: text_to_dialogue renders them whole and
+    never looks a piece up, so warming their pieces buys nothing.
+    """
+    pieces = {}
+    for category in categories or CATEGORIES:
+        for block in core.load_phrases(category):
+            if parse_turns(block):
+                continue
+            filler = {name: "x" for name in PLACEHOLDER.findall(block)}
+            for kind, text in split_phrase(block, filler):
+                if kind == "phrase":
+                    pieces.setdefault(text, category)
+    return pieces
+
+
 def build_dialogue(block, label):
     """Render a two-voice block whole. Returns the same report shape as build()."""
     t0 = time.monotonic()
@@ -456,7 +478,9 @@ def state():
 
 @app.get("/health")
 def health():
-    return jsonify(ok=True, queued=JOBS.qsize(), dry_run=DRY)
+    return jsonify(ok=True, queued=JOBS.qsize(), dry_run=DRY,
+                   # so silence can be told apart from a dead socket
+                   feed=live.STATUS)
 
 
 @app.get("/pieces")
@@ -469,15 +493,7 @@ def pieces():
 @app.route("/warm", methods=["GET", "POST"])
 def warm():
     """Pre-render every phrase piece, i.e. all the ones with no name in them."""
-    todo = []
-    for category in CATEGORIES:
-        for block in core.load_phrases(category):
-            dummy = {n: "x" for n in PLACEHOLDER.findall(block)}
-            for kind, text in split_phrase(block, dummy):
-                # split_phrase, so these are exactly what a request looks up
-                if kind == "phrase" and text not in todo:
-                    if not core.piece_path(text).exists():
-                        todo.append(text)
+    todo = [t for t in phrase_pieces() if not core.piece_path(t).exists()]
     chars = sum(len(t) for t in todo)
     if request.values.get("confirm") != "1":
         return jsonify(pieces_missing=len(todo), characters=chars,
