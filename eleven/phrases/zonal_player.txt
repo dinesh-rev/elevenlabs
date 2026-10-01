@@ -1,0 +1,51 @@
+## singles
+
+# 1. Busiest Area
+[analytical] {team1} really came alive in the {team1_top_zone}, with {team1_top_percent} percent of the activity there. [focused] The {team1_low_zone} was barely involved, at just {team1_low_percent} percent.
+
+# 2. Both Players
+[analytical] {team1} kept going back to the {team1_top_zone}, at {team1_top_percent} percent. [pause] [focused] {team2} had their own favourite area — the {team2_top_zone}, on {team2_top_percent} percent.
+
+# 3. Where the Work Happened
+[focused] A lot of {team1}'s action came through the {team1_top_zone}, accounting for {team1_top_percent} percent. [analytical] The {team1_low_zone} was almost ignored, at only {team1_low_percent} percent.
+
+# 4. Contrast
+[analytical] Two very different stories here. [emphasis] {team1} leaned towards the {team1_top_zone}, while {team2} preferred the {team2_top_zone}. [focused] That really shows how differently these rallies were shaped.
+
+# 5. Quiet Corner
+[analytical] One area hardly featured for {team1} — the {team1_low_zone}, at just {team1_low_percent} percent. [focused] The {team1_top_zone} was where most of the action happened, at {team1_top_percent} percent.
+
+# 6. Simple Summary
+[focused] {team1} kept finding the {team1_top_zone}. [analytical] {team2}, meanwhile, favoured the {team2_top_zone}. Two very different patterns.
+
+# 7. Court Balance
+[analytical] {team1}'s court map strongly points towards the {team1_top_zone}, at {team1_top_percent} percent. [impressed] The {team1_low_zone} barely came into the picture.
+
+# 8. Side by Side
+[focused] {team1} was most active in the {team1_top_zone} at {team1_top_percent} percent, and least active in the {team1_low_zone} at {team1_low_percent} percent. [pause] [analytical] {team2} saw most of their activity in the {team2_top_zone}, at {team2_top_percent} percent.
+
+## doubles
+
+# 1. Team Shape
+[analytical] {team1} really loaded the {team1_top_zone}, with {team1_top_percent} percent of the activity there. [focused] The {team1_low_zone} hardly featured, at just {team1_low_percent} percent.
+
+# 2. Both Pairs
+[analytical] {team1} kept working through the {team1_top_zone}, at {team1_top_percent} percent. [pause] [focused] {team2} leaned towards the {team2_top_zone}, on {team2_top_percent} percent.
+
+# 3. Where the Pressure Came From
+[focused] Most of {team1}'s pressure came through the {team1_top_zone}, accounting for {team1_top_percent} percent. [analytical] Very little came from the {team1_low_zone}.
+
+# 4. Contrasting Shapes
+[analytical] Two completely different court shapes. [emphasis] {team1} worked the {team1_top_zone}, while {team2} built around the {team2_top_zone}. [focused] That says a lot about how each pair approached the rallies.
+
+# 5. Rotation
+[analytical] {team1} spent {team1_top_percent} percent of their activity in the {team1_top_zone}. [focused] Only {team1_low_percent} percent came through the {team1_low_zone}. That rotation had a very clear bias.
+
+# 6. Simple Summary
+[focused] {team1} kept returning to the {team1_top_zone}. [analytical] {team2} preferred the {team2_top_zone}. Very different shapes from the two pairs.
+
+# 7. Court Coverage
+[analytical] {team1}'s court map leans strongly towards the {team1_top_zone}, at {team1_top_percent} percent. [impressed] The {team1_low_zone} barely got involved.
+
+# 8. Pair by Pair
+[focused] {team1} was most active in the {team1_top_zone} at {team1_top_percent} percent, and least active in the {team1_low_zone}. [pause] [analytical] {team2} saw most of their activity in the {team2_top_zone}, at {team2_top_percent} percent.

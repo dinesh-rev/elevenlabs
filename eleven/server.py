@@ -31,6 +31,7 @@ import sys
 import threading
 import time
 import traceback
+from datetime import datetime
 import uuid
 
 from flask import Flask, request, jsonify, send_file
@@ -38,6 +39,7 @@ from werkzeug.exceptions import HTTPException
 
 import analytics
 import core
+import zonal_player
 import live
 import logging
 from core import BASE_DIR, CATEGORIES, AUDIO_DIR, PLACEHOLDER, SAMPLE_RATE
@@ -152,6 +154,46 @@ def phrase_pieces(categories=None):
                 if kind == "phrase":
                     pieces.setdefault(text, category)
     return pieces
+
+
+# ---------------------------------------------------------------------------
+# pre-rendering, so a live trigger never waits on the API
+# ---------------------------------------------------------------------------
+PRERENDER = {"running": False, "done": 0, "total": 0,
+             "spent": 0, "budget": 0, "error": "", "finished_at": ""}
+PRERENDER_LOCK = threading.Lock()
+
+
+def missing_pieces(categories=None):
+    """{category: [text]} for the reusable pieces not yet on disk."""
+    todo = {}
+    for text, category in phrase_pieces(categories).items():
+        if not core.piece_path(text).exists():
+            todo.setdefault(category, []).append(text)
+    return todo
+
+
+def render_missing(todo, budget):
+    """Render what fits, cheapest category first, updating PRERENDER as it goes.
+
+    Cheapest first so a small budget finishes whole categories rather than
+    leaving several half done.
+    """
+    cost = lambda texts: sum(len(t) for t in texts)
+    try:
+        for category in sorted(todo, key=lambda c: cost(todo[c])):
+            for text in sorted(todo[category], key=len):
+                if PRERENDER["spent"] + len(text) > budget:
+                    continue          # too big for what is left
+                core.render_pcm(text, dry=DRY)
+                PRERENDER["spent"] += len(text)
+                PRERENDER["done"] += 1
+                log.info("prerender [%s] %d chars", category, len(text))
+    except Exception as e:
+        PRERENDER["error"] = readable(e)
+    finally:
+        PRERENDER["running"] = False
+        PRERENDER["finished_at"] = datetime.now().isoformat(timespec="seconds")
 
 
 def build_dialogue(block, label):
@@ -339,7 +381,11 @@ def say_category(category):
         if given and not (key == "player" and chosen.upper() in ("A", "1", "B", "2")):
             values[key] = given.strip()
             supplied.add(key)
-    # whatever the request did not give, the court map may supply
+    # whatever the request did not give, the zone map may supply
+    for key, value in zonal_player.current(mode=request.values.get("mode")).items():
+        if key in values and not values[key] and value:
+            values[key] = value
+    # then the court map
     for key, value in analytics.current().items():
         if key in values and not values[key] and value:
             values[key] = value
@@ -348,6 +394,9 @@ def say_category(category):
         if key in values and not values[key] and value:
             values[key] = value
     section = request.values.get("section")
+    if section is None and category == "zonal_player":
+        # the file says which kind of match it measured, so the phrases follow
+        section = request.values.get("mode") or zonal_player.mode() or "singles"
     if section is None and category in SECTIONS:
         # named lines only when the caller asks for them. A live match still
         # fills the names, but it does not by itself switch the section --
@@ -463,6 +512,56 @@ def conditions():
     that speaks a weather line.
     """
     return jsonify(core.weather_now())
+
+
+@app.route("/prerender", methods=["GET", "POST"])
+def prerender():
+    """Generate the audio cache ahead of a match.
+
+        GET  /prerender                       what is missing, spends nothing
+        POST /prerender?confirm=1             render everything missing
+             &budget=5000                     optional cap, in characters
+             &category=score                  optional; repeatable
+
+    Only pieces with no player name in them: the names themselves cannot be
+    known before the players are on court. Returns as soon as the work starts;
+    poll /prerender/status for progress.
+    """
+    categories = request.values.getlist("category") or None
+    for category in categories or []:
+        if category not in CATEGORIES:
+            return jsonify(error=f"unknown category {category!r}",
+                           categories=CATEGORIES), 404
+
+    todo = missing_pieces(categories)
+    pieces = sum(len(v) for v in todo.values())
+    chars = sum(len(t) for v in todo.values() for t in v)
+    plan = {"pieces_missing": pieces, "characters": chars,
+            "by_category": {c: sum(len(t) for t in v) for c, v in todo.items()}}
+
+    if request.values.get("confirm") != "1":
+        return jsonify(**plan, note="eleven_v3 bills about 1 credit per "
+                       "character", to_run="POST with ?confirm=1&budget=N")
+
+    # no budget means the lot. Worth knowing the whole library is more than a
+    # month's quota, so an unbudgeted run will stop when the credits run out.
+    budget = request.values.get("budget", type=int) or chars
+
+    with PRERENDER_LOCK:
+        if PRERENDER["running"]:
+            return jsonify(error="a run is already in progress",
+                           status=PRERENDER), 409
+        PRERENDER.update(running=True, done=0, total=pieces, spent=0,
+                         budget=budget, error="", finished_at="")
+    threading.Thread(target=render_missing, args=(todo, budget),
+                     daemon=True, name="prerender").start()
+    return jsonify(started=True, budget=budget, **plan), 202
+
+
+@app.get("/prerender/status")
+def prerender_status():
+    """How the current or last pre-render run went."""
+    return jsonify(PRERENDER)
 
 
 @app.get("/categories")

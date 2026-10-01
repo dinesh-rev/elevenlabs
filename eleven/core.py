@@ -43,7 +43,7 @@ def voice_for(speaker):
 
 CATEGORIES = ["match_start", "rally", "smash", "highlights", "winners",
               "convo", "weather", "voting", "analytics", "score",
-              "result_voting", "player_heatmap"]
+              "result_voting", "player_heatmap", "zonal_player"]
 
 # Audio is rendered as raw PCM rather than mp3 because PCM at one sample rate
 # joins by plain byte concatenation -- no ffmpeg, no re-encode, and none of the
@@ -189,6 +189,11 @@ def values_for(s):
         "temperature": "",
         "condition": "",
         "wind": "",
+        # busiest and quietest court zone per side, from zonal_player.py
+        "team1_top_zone": "", "team1_top_percent": "",
+        "team1_low_zone": "", "team1_low_percent": "",
+        "team2_top_zone": "", "team2_top_percent": "",
+        "team2_low_zone": "", "team2_low_percent": "",
         # court map, from analytics.py
         "team1_front_percent": "",
         "team1_back_percent": "",
