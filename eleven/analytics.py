@@ -32,6 +32,9 @@ BACK = ("R2", "R3")
 
 BLANK = {f"team{n}_{half}_percent": ""
          for n in (1, 2) for half in ("front", "back")}
+BLANK.update(team1="", team2="")      # the names the file itself carries
+BLANK.update(team1_zone="", team1_percent="",
+             team2_zone="", team2_percent="")
 
 
 def load(path=None):
@@ -77,38 +80,90 @@ def number(value):
         return 0.0
 
 
-def sides(block):
-    """The two sides in the order the file lists them, whatever they are called.
+# Doubles names its sides, so they are looked up rather than taken in order --
+# the same two keys zonal_player.py uses, so {team1_front_percent} and
+# {team1_top_zone} cannot end up describing opposite sides of the same line.
+DOUBLES_SIDES = ("team_near", "team_far")
 
-    Singles keys them by player name, doubles by team_near / team_far.
+
+def sides(block):
+    """The two sides as [(name, body)], team1 first.
+
+    Doubles is keyed by team_near / team_far and looked up by name. Singles is
+    keyed by the players' own names, so file order is all there is to go on.
     """
-    group = block.get("players") or block.get("teams") or {}
+    group = block.get("teams")
+    if isinstance(group, dict):
+        found = [(k, group[k]) for k in DOUBLES_SIDES if k in group]
+        return found if len(found) == 2 else []
+    group = block.get("players")
     return list(group.items())[:2] if isinstance(group, dict) else []
 
 
-def current(path=None, mode=None):
-    """Speech-ready front/back percentages for analytics.txt. Never raises.
+def names(pair):
+    """{"team1": ..., "team2": ...} from the players the file lists, if any.
 
-    Every request for every category passes through here, so a half-written
-    or malformed court map has to mean no analytics, not no commentary.
+    Separate from the percentages: the file can name its players even when the
+    zones are missing or in a shape this reader does not understand, and a
+    name is still worth having.
     """
-    block = pick_mode(load(path), mode)
-    pair = sides(block)
-    if len(pair) < 2:
-        return dict(BLANK)
+    out = {}
+    for number_, (_, body) in enumerate(pair, 1):
+        listed = (body or {}).get("players")
+        if isinstance(listed, list) and listed:
+            # "and" reads better than a list when spoken
+            out[f"team{number_}"] = " and ".join(str(n) for n in listed)
+    return out
 
+
+def strongest(pair):
+    """Each side's busiest zone, named and as a percentage.
+
+    The file reports whichever zones it measured, so the zone is taken from
+    the file rather than assumed. Underscores become spaces and the name is
+    lower-cased, because it is read aloud mid-sentence.
+    """
     out = {}
     for number_, (_, body) in enumerate(pair, 1):
         zones = (body or {}).get("zones")
         if not isinstance(zones, dict):
-            return dict(BLANK)          # half an answer is worse than none
+            continue
+        usable = {name: number(value) for name, value in zones.items()
+                  if number(value) > 0}
+        if not usable:
+            continue
+        top = max(usable, key=usable.get)
+        out[f"team{number_}_zone"] = top.replace("_", " ").lower()
+        out[f"team{number_}_percent"] = str(round(usable[top]))
+    return out
+
+
+def percentages(pair):
+    """The front/back split per side, or {} if the zones do not give one."""
+    out = {}
+    for number_, (_, body) in enumerate(pair, 1):
+        zones = (body or {}).get("zones")
+        if not isinstance(zones, dict):
+            return {}
         front = sum(number(zones.get(z)) for z in FRONT)
         back = sum(number(zones.get(z)) for z in BACK)
         if front + back <= 0:
-            return dict(BLANK)
+            return {}               # half an answer is worse than none
         out[f"team{number_}_front_percent"] = str(round(front))
         out[f"team{number_}_back_percent"] = str(round(back))
     return out
+
+
+def current(path=None, mode=None):
+    """Speech-ready values from the court map. Never raises.
+
+    Every request for every category passes through here, so a half-written
+    or malformed court map has to mean no analytics, not no commentary.
+    """
+    pair = sides(pick_mode(load(path), mode))
+    if len(pair) < 2:
+        return dict(BLANK)
+    return {**BLANK, **names(pair), **strongest(pair), **percentages(pair)}
 
 
 if __name__ == "__main__":

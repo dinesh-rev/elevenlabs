@@ -106,6 +106,9 @@ BLANK = {
     "status": "", "completed": False, "winner": "", "confirmed": False,
     "swapped": False, "last_scorer": "",
     "team1": [], "team2": [],      # the sides split into individual players
+    # False until a frame arrives. A restored match has names but no result,
+    # and a score or a winner invented from nothing would be spoken as fact.
+    "live": False,
 }
 
 
@@ -155,26 +158,30 @@ class MatchState:
 
 def values_for(s):
     """What each {placeholder} means for the match in snapshot `s`."""
-    if s["winner"]:
+    if not s.get("live"):
+        # names restored from disk, nothing played yet
+        winner = opponent = ""
+    elif s["winner"]:
         winner = s["winner"]
-    elif (s["games1"], s["score1"]) >= (s["games2"], s["score2"]):
-        winner = s["player1"]
+        opponent = s["player2"] if winner == s["player1"] else s["player1"]
     else:
-        winner = s["player2"]
+        ahead = (s["games1"], s["score1"]) >= (s["games2"], s["score2"])
+        winner = s["player1"] if ahead else s["player2"]
+        opponent = s["player2"] if ahead else s["player1"]
     return {
         # whoever won the most recent point. The feed never says who played
         # the shot, so this is the closest it can get.
         "player": s["player2"] if s["last_scorer"] == "2" else s["player1"],
         "winner": winner,
-        "opponent": s["player2"] if winner == s["player1"] else s["player1"],
+        "opponent": opponent,
         # the two sides by position, which match_start.txt and rally.txt use to
         # name both players in one line
         "player1": s["player1"],
         "player2": s["player2"],
         # as strings: the score is legitimately 0 at the start of a game, and
         # a bare 0 would read as "missing" to pick_raw
-        "score1": str(s["score1"]),
-        "score2": str(s["score2"]),
+        "score1": str(s["score1"]) if s.get("live") else "",
+        "score2": str(s["score2"]) if s.get("live") else "",
         # the same two sides under the names players.json uses. Separate keys,
         # so player1/player2 are untouched and existing phrases are unaffected.
         "team1": " and ".join(s.get("team1") or []) or s["player1"],
@@ -194,6 +201,9 @@ def values_for(s):
         "team1_low_zone": "", "team1_low_percent": "",
         "team2_top_zone": "", "team2_top_percent": "",
         "team2_low_zone": "", "team2_low_percent": "",
+        # each side's strongest zone, named by analytics.py from the file
+        "team1_zone": "", "team1_percent": "",
+        "team2_zone": "", "team2_percent": "",
         # court map, from analytics.py
         "team1_front_percent": "",
         "team1_back_percent": "",

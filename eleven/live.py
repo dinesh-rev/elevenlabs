@@ -123,6 +123,7 @@ def read_frame(frame):
         "completed": bool(m.get("completed")),
         "winner": p1 if side == "A" else p2 if side == "B" else "",
         "confirmed": confirmed,
+        "live": True,
         "updated_at": str(m.get("updatedAt") or ""),
         # passed through unused: if this ever flips mid-match it may mean the
         # board swapped sides, which would invert the A/B -> player1/2 mapping
@@ -175,7 +176,8 @@ def read_players():
     # and /score read its final score as though the match were still on.
     record = dict(match)
     record.update(score1=0, score2=0, games1=0, games2=0, set_no=0,
-                  winner="", completed=False, status="", last_scorer="")
+                  winner="", completed=False, status="", last_scorer="",
+                  live=False)      # names only: no score, no result, until a frame
     try:
         record["team1"] = list(data["players"]["team1"].values())
         record["team2"] = list(data["players"]["team2"].values())

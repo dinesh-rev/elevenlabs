@@ -30,6 +30,22 @@
 # 10. Final Look
 [analytical] One final look: {team1} split the court {team1_front_percent} to {team1_back_percent}. [pause] {team2} finished at {team2_front_percent} to {team2_back_percent}.
 
+# 11. Strongest Area
+[analytical] {team1}'s strongest area was the {team1_zone}, at {team1_percent} percent. [focused] For {team2}, it was the {team2_zone} on {team2_percent} percent.
+
+# 12. Where the Power Came From
+[focused] Most of {team1}'s best work came from the {team1_zone}, {team1_percent} percent of it. [pause] [analytical] {team2} favoured the {team2_zone}.
+
+# 13. Simple Read
+[analytical] {team1} was strongest in the {team1_zone}. [pause] {team2} in the {team2_zone}.
+
+# 14. Side by Side
+[focused] {team1} peaked in the {team1_zone} at {team1_percent} percent, while {team2} managed {team2_percent} percent from the {team2_zone}. [analytical] Two different pictures.
+
+# 15. One Standout
+[analytical] One area stands out for {team1}, and that is the {team1_zone}, on {team1_percent} percent. [impressed] A clear strength.
+
+
 ## doubles
 
 # 1. Pair Shape
@@ -61,3 +77,19 @@
 
 # 10. Final Shape
 [analytical] The final shape: {team1} on {team1_front_percent} percent forward against {team1_back_percent} percent deep. [pause] [impressed] {team2} at {team2_front_percent} and {team2_back_percent} percent.
+
+# 11. Pair Strength
+[analytical] {team1} were strongest from the {team1_zone}, at {team1_percent} percent. [focused] {team2} did their best work in the {team2_zone} on {team2_percent} percent.
+
+# 12. Where It Came From
+[focused] Most of {team1}'s damage came through the {team1_zone}, {team1_percent} percent of it. [pause] [analytical] {team2} preferred the {team2_zone}.
+
+# 13. Simple Read
+[analytical] {team1} strongest in the {team1_zone}. [pause] {team2} in the {team2_zone}.
+
+# 14. Pair by Pair
+[focused] {team1} peaked in the {team1_zone} at {team1_percent} percent, {team2} in the {team2_zone} at {team2_percent}. [analytical] Two different shapes.
+
+# 15. Standout Zone
+[analytical] One zone stands out for {team1}, the {team1_zone}, on {team1_percent} percent. [impressed] That is where they hurt the opposition.
+

@@ -31,18 +31,21 @@ curl "localhost:8080/smash"                     # shortcut
 curl "localhost:8080/say?category=smash"        # canonical
 ```
 
-| Category | Blocks | Placeholders it uses |
-|---|---|---|
-| `match_start` | 20 | `player1` `player2` `country1` `country2` `court_no` |
-| `rally` | 20 | `player1` `player2` |
-| `smash` | 20 | `player` |
-| `highlights` | 20 | none |
-| `winners` | 10 | `winner` `opponent` |
-| `convo` | 10 | none — **two voices**, rendered whole |
-| `weather` | 18 | `temperature` `condition` `wind` `high` `low` `rain_chance` `outlook` |
-| `voting` | 10 | none |
-| `analytics` | 10 | `team1` `team2` `team1_front_percent` `team1_back_percent` `team2_front_percent` `team2_back_percent` |
-| `score` | 10 | `player1` `player2` `score1` `score2` |
+| Category | Blocks | Sections | Placeholders it uses |
+|---|---|---|---|
+| `match_start` | 20 | no-players, with-players | `player1` `player2` `country1` `country2` `court_no` |
+| `rally` | 20 | no-players, with-players | `player1` `player2` |
+| `smash` | 30 | no-players, with-players | `player` |
+| `highlights` | 20 | — | none |
+| `winners` | 10 | — | `winner` `opponent` |
+| `convo` | 10 | — | none — **two voices**, rendered whole |
+| `weather` | 18 | — | `temperature` `condition` `wind` `high` `low` `rain_chance` `outlook` |
+| `voting` | 10 | — | none |
+| `analytics` | 20 | doubles, singles | `team1` `team2` `team1_front_percent` `team1_back_percent` `team2_front_percent` `team2_back_percent` |
+| `score` | 10 | — | `player1` `player2` `score1` `score2` |
+| `result_voting` | 10 | — | none |
+| `player_heatmap` | 10 | — | none |
+| `zonal_player` | 16 | doubles, singles | `team1` `team2` `team1_top_zone` `team1_top_percent` `team1_low_zone` `team1_low_percent` `team2_*` |
 
 ## Parameters
 
@@ -64,7 +67,10 @@ curl "localhost:8080/say?category=analytics&team1=Kannama&team2=Akmal"
 `player=A|B|1|2` selects a side of the live match. Any other value is used as
 the name itself.
 
-`section=` forces a section on categories that have them:
+`mode=singles|doubles` picks the section for `analytics` and `zonal_player`;
+without it they follow the `mode` field in their own data file.
+
+`section=` forces a section on any category that has them:
 
 ```bash
 curl "localhost:8080/say?category=smash&section=no-players"

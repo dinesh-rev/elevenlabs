@@ -398,9 +398,7 @@ def say_category(category):
         # the data file says which kind of match it measured, so the phrases
         # follow. analytics has its own file, zonal_player another.
         reader = analytics if category == "analytics" else zonal_player
-        section = (request.values.get("mode")
-                   or (reader.mode() if hasattr(reader, "mode") else "")
-                   or "singles")
+        section = request.values.get("mode") or reader.mode() or "singles"
     if section is None and category in SECTIONS:
         # named lines only when the caller asks for them. A live match still
         # fills the names, but it does not by itself switch the section --
