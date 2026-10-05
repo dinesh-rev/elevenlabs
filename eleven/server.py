@@ -386,7 +386,7 @@ def say_category(category):
         if key in values and not values[key] and value:
             values[key] = value
     # then the court map
-    for key, value in analytics.current().items():
+    for key, value in analytics.current(mode=request.values.get("mode")).items():
         if key in values and not values[key] and value:
             values[key] = value
     # and then the live conditions
@@ -394,9 +394,13 @@ def say_category(category):
         if key in values and not values[key] and value:
             values[key] = value
     section = request.values.get("section")
-    if section is None and category == "zonal_player":
-        # the file says which kind of match it measured, so the phrases follow
-        section = request.values.get("mode") or zonal_player.mode() or "singles"
+    if section is None and category in ("zonal_player", "analytics"):
+        # the data file says which kind of match it measured, so the phrases
+        # follow. analytics has its own file, zonal_player another.
+        reader = analytics if category == "analytics" else zonal_player
+        section = (request.values.get("mode")
+                   or (reader.mode() if hasattr(reader, "mode") else "")
+                   or "singles")
     if section is None and category in SECTIONS:
         # named lines only when the caller asks for them. A live match still
         # fills the names, but it does not by itself switch the section --

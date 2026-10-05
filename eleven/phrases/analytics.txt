@@ -1,3 +1,5 @@
+## singles
+
 # 1. Side by Side
 [analytical] {team1} brought more play forward at {team1_front_percent} percent, with {team1_back_percent} percent going long. [pause] {team2} showed a different balance at {team2_front_percent} and {team2_back_percent} percent.
 
@@ -27,3 +29,35 @@
 
 # 10. Final Look
 [analytical] One final look: {team1} split the court {team1_front_percent} to {team1_back_percent}. [pause] {team2} finished at {team2_front_percent} to {team2_back_percent}.
+
+## doubles
+
+# 1. Pair Shape
+[analytical] {team1} worked {team1_front_percent} percent of their play from the front, with {team1_back_percent} percent from deeper positions. [pause] {team2} set up at {team2_front_percent} and {team2_back_percent} percent.
+
+# 2. Rotation
+[focused] The rotation shows {team1} taking {team1_front_percent} percent at the net and {team1_back_percent} percent behind it. [pause] [analytical] For {team2}, it was {team2_front_percent} and {team2_back_percent} percent.
+
+# 3. Front and Back
+[analytical] {team1} held the front court for {team1_front_percent} percent of the play, with {team1_back_percent} percent from the rear. [pause] {team2} split it {team2_front_percent} to {team2_back_percent}.
+
+# 4. Two Shapes
+[analytical] Two different shapes from the pairs. [emphasis] {team1} on {team1_front_percent} percent forward, {team2} on {team2_front_percent} percent. [focused] That says plenty about how each side set up.
+
+# 5. Attacking Pair
+[focused] {team1} spent {team1_back_percent} percent of their time in the rear court, building the attack. [pause] [analytical] {team2} came in at {team2_back_percent} percent.
+
+# 6. Net Presence
+[analytical] Good net presence from {team1}, on {team1_front_percent} percent at the front. [pause] {team2} were there {team2_front_percent} percent of the time.
+
+# 7. Court Split
+[focused] For {team1}, {team1_front_percent} percent forward and {team1_back_percent} percent back. [pause] [analytical] {team2} finished {team2_front_percent} and {team2_back_percent}.
+
+# 8. Pair by Pair
+[analytical] Looking pair by pair, {team1} were {team1_front_percent} percent front and {team1_back_percent} percent rear. [pause] {team2} recorded {team2_front_percent} and {team2_back_percent} percent.
+
+# 9. Who Covered What
+[focused] {team1} covered the front for {team1_front_percent} percent of the play, the back for {team1_back_percent}. [pause] [analytical] {team2} were {team2_front_percent} and {team2_back_percent} percent.
+
+# 10. Final Shape
+[analytical] The final shape: {team1} on {team1_front_percent} percent forward against {team1_back_percent} percent deep. [pause] [impressed] {team2} at {team2_front_percent} and {team2_back_percent} percent.

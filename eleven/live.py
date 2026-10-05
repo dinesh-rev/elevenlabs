@@ -170,10 +170,17 @@ def read_players():
         return None
     if not match.get("confirmed") or not match.get("player1"):
         return None
-    # the saved match block carries every field MatchState.update reads
+    # The names are worth keeping however old they are. The result is not:
+    # restoring a finished match would have /winners announce a stale winner
+    # and /score read its final score as though the match were still on.
     record = dict(match)
-    record["team1"] = list(data["players"]["team1"].values())
-    record["team2"] = list(data["players"]["team2"].values())
+    record.update(score1=0, score2=0, games1=0, games2=0, set_no=0,
+                  winner="", completed=False, status="", last_scorer="")
+    try:
+        record["team1"] = list(data["players"]["team1"].values())
+        record["team2"] = list(data["players"]["team2"].values())
+    except (KeyError, AttributeError, TypeError):
+        return None
     return record
 
 
