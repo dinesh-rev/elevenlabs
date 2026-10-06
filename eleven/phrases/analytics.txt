@@ -1,95 +1,94 @@
 ## singles
 
-# 1. Side by Side
-[analytical] {team1} brought more play forward at {team1_front_percent} percent, with {team1_back_percent} percent going long. [pause] {team2} showed a different balance at {team2_front_percent} and {team2_back_percent} percent.
+# 1. Strongest Area
+[analytical] {team1} found the most success targeting the {team1_zone}, at {team1_percent} percent. [focused] For {team2}, the strongest target was the {team2_zone} on {team2_percent} percent.
 
-# 2. Clearer Picture
-[analytical] {team1} kept more of the action close to the net, while {team1_back_percent} percent reached the rear court. [pause] {team2} showed {team2_front_percent} percent short and {team2_back_percent} percent long.
+# 2. Best Target
+[focused] {team1} got the best return from the {team1_zone}, with {team1_percent} percent. [pause] {team2} leaned towards the {team2_zone} at {team2_percent} percent.
 
-# 3. Deeper Positions
-[focused] {team1} drew {team1_front_percent} percent of the play forward, with {team1_back_percent} percent pushed deep. [pause] {team2} finished at {team2_front_percent} and {team2_back_percent} percent.
+# 3. Simple Read
+[analytical] {team1} was most effective when targeting the {team1_zone}. [pause] {team2} found more success through the {team2_zone}.
 
-# 4. Breaking It Down
-[analytical] {team1}'s court pattern leaned {team1_front_percent} percent towards the forecourt and {team1_back_percent} percent towards the rear. [pause] {team2} showed {team2_front_percent} and {team2_back_percent} percent.
+# 4. Side by Side
+[focused] {team1} produced their strongest pattern through the {team1_zone} at {team1_percent} percent, while {team2} reached {team2_percent} percent through the {team2_zone}. [analytical] Two different attacking patterns.
 
-# 5. Rally Pattern
-[analytical] {team1} kept pulling the action forward, with {team1_front_percent} percent landing short and {team1_back_percent} percent going long. [pause] {team2} showed its own pattern at {team2_front_percent} and {team2_back_percent} percent.
+# 5. One Standout
+[analytical] One target area stands out for {team1}, and that is the {team1_zone}, on {team1_percent} percent. [impressed] A clear attacking strength.
 
-# 6. Flow of the Match
-[focused] For {team1}, {team1_front_percent} percent stayed closer to the net, while {team1_back_percent} percent reached the rear court. [pause] {team2} split it {team2_front_percent} to {team2_back_percent}.
+# 6. Main Threat
+[focused] The {team1_zone} was the key target for {team1}, accounting for {team1_percent} percent. [pause] {team2}'s main area was the {team2_zone} at {team2_percent} percent.
 
-# 7. Both Sides
-[analytical] {team1} had a {team1_front_percent} to {team1_back_percent} split across the court. [pause] {team2} came in at {team2_front_percent} to {team2_back_percent}. [focused] Two different rally patterns.
+# 7. Where It Worked
+[analytical] {team1} did their best work by sending the shuttle into the {team1_zone}, at {team1_percent} percent. [pause] {team2} favoured the {team2_zone} on {team2_percent} percent.
 
-# 8. Final Court Activity
-[analytical] {team1} finished with more action in the forecourt at {team1_front_percent} percent, compared with {team1_back_percent} percent deeper. [pause] {team2} closed at {team2_front_percent} and {team2_back_percent} percent.
+# 8. Target Pattern
+[focused] The numbers point to the {team1_zone} for {team1}, at {team1_percent} percent. [pause] For {team2}, the {team2_zone} came out strongest at {team2_percent} percent.
 
-# 9. Court Usage
-[focused] {team1} showed a clear split: {team1_front_percent} percent short and {team1_back_percent} percent long. [pause] {team2} recorded {team2_front_percent} and {team2_back_percent} percent. [analytical] A useful contrast.
+# 9. Attacking Focus
+[analytical] {team1}'s attacking focus centred on the {team1_zone}, with {team1_percent} percent. [pause] {team2} showed the same kind of preference for the {team2_zone} at {team2_percent} percent.
 
-# 10. Final Look
-[analytical] One final look: {team1} split the court {team1_front_percent} to {team1_back_percent}. [pause] {team2} finished at {team2_front_percent} to {team2_back_percent}.
+# 10. Best Return
+[focused] {team1} got the strongest return from the {team1_zone}, on {team1_percent} percent. [pause] {team2} found their best result through the {team2_zone}, at {team2_percent} percent.
 
-# 11. Strongest Area
-[analytical] {team1}'s strongest area was the {team1_zone}, at {team1_percent} percent. [focused] For {team2}, it was the {team2_zone} on {team2_percent} percent.
+# 11. Clear Preference
+[analytical] There was a clear preference from {team1} for the {team1_zone}, with {team1_percent} percent. [pause] {team2} leaned most towards the {team2_zone} at {team2_percent} percent.
 
-# 12. Where the Power Came From
-[focused] Most of {team1}'s best work came from the {team1_zone}, {team1_percent} percent of it. [pause] [analytical] {team2} favoured the {team2_zone}.
+# 12. Where the Pressure Came
+[focused] Most of {team1}'s pressure came through the {team1_zone}, accounting for {team1_percent} percent. [pause] {team2} created their strongest pressure through the {team2_zone} on {team2_percent} percent.
 
-# 13. Simple Read
-[analytical] {team1} was strongest in the {team1_zone}. [pause] {team2} in the {team2_zone}.
+# 13. Most Effective Area
+[analytical] The {team1_zone} was the most effective area for {team1}, at {team1_percent} percent. [pause] For {team2}, it was the {team2_zone} at {team2_percent} percent.
 
-# 14. Side by Side
-[focused] {team1} peaked in the {team1_zone} at {team1_percent} percent, while {team2} managed {team2_percent} percent from the {team2_zone}. [analytical] Two different pictures.
+# 14. Final Comparison
+[focused] {team1} peaked through the {team1_zone} at {team1_percent} percent, while {team2} peaked through the {team2_zone} at {team2_percent} percent. [analytical] A clear contrast in shot selection.
 
-# 15. One Standout
-[analytical] One area stands out for {team1}, and that is the {team1_zone}, on {team1_percent} percent. [impressed] A clear strength.
+# 15. Strongest Pattern
+[analytical] The strongest pattern for {team1} came through the {team1_zone}, on {team1_percent} percent. [impressed] {team2} showed their best numbers in the {team2_zone} at {team2_percent} percent.
 
 
 ## doubles
 
-# 1. Pair Shape
-[analytical] {team1} worked {team1_front_percent} percent of their play from the front, with {team1_back_percent} percent from deeper positions. [pause] {team2} set up at {team2_front_percent} and {team2_back_percent} percent.
+# 1. Pair Strength
+[analytical] {team1} found the most success targeting the {team1_zone}, at {team1_percent} percent. [focused] {team2} produced their strongest pattern through the {team2_zone} on {team2_percent} percent.
 
-# 2. Rotation
-[focused] The rotation shows {team1} taking {team1_front_percent} percent at the net and {team1_back_percent} percent behind it. [pause] [analytical] For {team2}, it was {team2_front_percent} and {team2_back_percent} percent.
+# 2. Best Target
+[focused] {team1} got the best return through the {team1_zone}, with {team1_percent} percent. [pause] {team2} leaned towards the {team2_zone} at {team2_percent} percent.
 
-# 3. Front and Back
-[analytical] {team1} held the front court for {team1_front_percent} percent of the play, with {team1_back_percent} percent from the rear. [pause] {team2} split it {team2_front_percent} to {team2_back_percent}.
+# 3. Simple Read
+[analytical] {team1} were most effective when targeting the {team1_zone}. [pause] {team2} found more success through the {team2_zone}.
 
-# 4. Two Shapes
-[analytical] Two different shapes from the pairs. [emphasis] {team1} on {team1_front_percent} percent forward, {team2} on {team2_front_percent} percent. [focused] That says plenty about how each side set up.
+# 4. Pair by Pair
+[focused] {team1} produced their strongest pattern through the {team1_zone} at {team1_percent} percent, while {team2} reached {team2_percent} percent through the {team2_zone}. [analytical] Two different attacking approaches.
 
-# 5. Attacking Pair
-[focused] {team1} spent {team1_back_percent} percent of their time in the rear court, building the attack. [pause] [analytical] {team2} came in at {team2_back_percent} percent.
+# 5. Standout Zone
+[analytical] One target zone stands out for {team1}, the {team1_zone}, on {team1_percent} percent. [impressed] That is where they created the most attacking pressure.
 
-# 6. Net Presence
-[analytical] Good net presence from {team1}, on {team1_front_percent} percent at the front. [pause] {team2} were there {team2_front_percent} percent of the time.
+# 6. Main Threat
+[focused] The {team1_zone} was the main target for {team1}, accounting for {team1_percent} percent. [pause] {team2}'s strongest area was the {team2_zone} at {team2_percent} percent.
 
-# 7. Court Split
-[focused] For {team1}, {team1_front_percent} percent forward and {team1_back_percent} percent back. [pause] [analytical] {team2} finished {team2_front_percent} and {team2_back_percent}.
+# 7. Where It Worked
+[analytical] {team1} did their best work by directing play into the {team1_zone}, at {team1_percent} percent. [pause] {team2} favoured the {team2_zone} on {team2_percent} percent.
 
-# 8. Pair by Pair
-[analytical] Looking pair by pair, {team1} were {team1_front_percent} percent front and {team1_back_percent} percent rear. [pause] {team2} recorded {team2_front_percent} and {team2_back_percent} percent.
+# 8. Target Pattern
+[focused] The pair's numbers point to the {team1_zone} for {team1}, at {team1_percent} percent. [pause] For {team2}, the {team2_zone} came out strongest at {team2_percent} percent.
 
-# 9. Who Covered What
-[focused] {team1} covered the front for {team1_front_percent} percent of the play, the back for {team1_back_percent}. [pause] [analytical] {team2} were {team2_front_percent} and {team2_back_percent} percent.
+# 9. Attacking Focus
+[analytical] {team1}'s attacking focus centred on the {team1_zone}, with {team1_percent} percent. [pause] {team2} showed their strongest preference for the {team2_zone} at {team2_percent} percent.
 
-# 10. Final Shape
-[analytical] The final shape: {team1} on {team1_front_percent} percent forward against {team1_back_percent} percent deep. [pause] [impressed] {team2} at {team2_front_percent} and {team2_back_percent} percent.
+# 10. Best Return
+[focused] {team1} got their strongest return from the {team1_zone}, on {team1_percent} percent. [pause] {team2} found their best result through the {team2_zone}, at {team2_percent} percent.
 
-# 11. Pair Strength
-[analytical] {team1} were strongest from the {team1_zone}, at {team1_percent} percent. [focused] {team2} did their best work in the {team2_zone} on {team2_percent} percent.
+# 11. Clear Preference
+[analytical] There was a clear preference from {team1} for the {team1_zone}, with {team1_percent} percent. [pause] {team2} leaned most towards the {team2_zone} at {team2_percent} percent.
 
-# 12. Where It Came From
-[focused] Most of {team1}'s damage came through the {team1_zone}, {team1_percent} percent of it. [pause] [analytical] {team2} preferred the {team2_zone}.
+# 12. Where the Pressure Came
+[focused] Most of {team1}'s attacking pressure came through the {team1_zone}, accounting for {team1_percent} percent. [pause] {team2} created their strongest pressure through the {team2_zone} on {team2_percent} percent.
 
-# 13. Simple Read
-[analytical] {team1} strongest in the {team1_zone}. [pause] {team2} in the {team2_zone}.
+# 13. Most Effective Area
+[analytical] The {team1_zone} was the most effective target for {team1}, at {team1_percent} percent. [pause] For {team2}, it was the {team2_zone} at {team2_percent} percent.
 
-# 14. Pair by Pair
-[focused] {team1} peaked in the {team1_zone} at {team1_percent} percent, {team2} in the {team2_zone} at {team2_percent}. [analytical] Two different shapes.
+# 14. Final Comparison
+[focused] {team1} peaked through the {team1_zone} at {team1_percent} percent, while {team2} peaked through the {team2_zone} at {team2_percent} percent. [analytical] Two different attacking patterns from the pairs.
 
-# 15. Standout Zone
-[analytical] One zone stands out for {team1}, the {team1_zone}, on {team1_percent} percent. [impressed] That is where they hurt the opposition.
-
+# 15. Strongest Pattern
+[analytical] The strongest pattern for {team1} came through the {team1_zone}, on {team1_percent} percent. [impressed] {team2} showed their best numbers in the {team2_zone} at {team2_percent} percent.

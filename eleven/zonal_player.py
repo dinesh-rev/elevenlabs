@@ -15,6 +15,7 @@ Values are strings phrased for speech, and empty when there is no data, so a
 phrase that needs them is skipped rather than spoken with a blank.
 """
 import json
+import re
 from pathlib import Path
 
 CONFIG = Path(__file__).resolve().parent / "configs" / "zonal_player.json"
@@ -25,6 +26,12 @@ SIDES = {"singles": ("player_0", "player_1"),
 
 KEYS = ("top_zone", "top_percent", "low_zone", "low_percent")
 BLANK = {f"team{n}_{k}": "" for n in (1, 2) for k in KEYS}
+BLANK.update(team1="", team2="")
+
+# a key that labels a side rather than naming anyone: "player_0", "team_far",
+# "Player 1 & Player 2". Spoken, both doubles sides would be "Player 1 and
+# Player 2", so these never count as names.
+LABEL = re.compile(r"^(player|team)[\s_]*(\d+|near|far)$", re.I)
 
 
 def load(path=None):
@@ -70,22 +77,65 @@ def mode(path=None):
     return ""
 
 
+def pair(sides, mode):
+    """The two sides as [(key, body)], team1 first.
+
+    The fixed keys when the file uses them; otherwise the file is keyed by the
+    teams themselves ("Saj & Ghaza") and its order is all there is to go on.
+    """
+    fixed = SIDES.get(mode, ())
+    if all(k in sides for k in fixed):
+        return [(k, sides[k]) for k in fixed]
+    found = [(k, v) for k, v in sides.items() if isinstance(v, dict)]
+    return found[:2] if len(found) >= 2 else []
+
+
+def side_name(key, body):
+    """Who is on this side, for speech, or "" if the file only labels it."""
+    listed = body.get("players")
+    if isinstance(listed, str):
+        listed = [listed]
+    if not isinstance(listed, list) or not listed:
+        # the key itself: "Saj & Ghaza (team_far)" -> ["Saj", "Ghaza"]
+        listed = re.split(r"\s*(?:&|,|\band\b)\s*",
+                          re.sub(r"\s*\(.*?\)\s*$", "", str(key)))
+    listed = [str(n).strip() for n in listed if str(n).strip()]
+    if not listed or any(LABEL.match(n) for n in listed):
+        return ""
+    # "and" reads better than a list when spoken
+    return " and ".join(listed)
+
+
+def names(found):
+    """{"team1": ..., "team2": ...} from the file, if it names both sides.
+
+    Both or neither: one side named from the file and the other from the feed
+    would mix two different matches in one line.
+    """
+    out = {f"team{n}": side_name(k, body) for n, (k, body) in enumerate(found, 1)}
+    return out if all(out.values()) else {}
+
+
 def current(path=None, mode=None):
     """Speech-ready zone extremes for both sides. Never raises."""
     block = pick_mode(load(path), mode)
     sides = block.get("players") or block.get("teams") or {}
     if not isinstance(sides, dict):
         return dict(BLANK)
-    names = SIDES.get(block.get("mode"), ())
-    if not names or not sides:
+    if block.get("mode") not in SIDES:
+        return dict(BLANK)
+    found = pair(sides, block["mode"])
+    if not found:
         return dict(BLANK)
 
-    out = dict(BLANK)
-    for number, side in enumerate(names, 1):
-        zones = (sides.get(side) or {}).get("zones") or {}
+    # the names are worth having even when the zones are not
+    named = {**BLANK, **names(found)}
+    out = dict(named)
+    for number, (_, body) in enumerate(found, 1):
+        zones = body.get("zones") or {}
         found = extremes(zones)
         if not found:
-            return dict(BLANK)      # half an answer is worse than none
+            return named            # half an answer is worse than none
         for key, value in found.items():
             out[f"team{number}_{key}"] = value
     return out

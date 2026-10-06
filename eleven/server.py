@@ -381,6 +381,16 @@ def say_category(category):
         if given and not (key == "player" and chosen.upper() in ("A", "1", "B", "2")):
             values[key] = given.strip()
             supplied.add(key)
+    # zonal_player and analytics each name the players in their own file, and
+    # those names beat the scraped ones. The feed's names are the fallback, and
+    # a name given on the request still beats both.
+    if category in ("zonal_player", "analytics"):
+        reader = analytics if category == "analytics" else zonal_player
+        listed = reader.current(mode=request.values.get("mode"))
+        if listed.get("team1") and listed.get("team2"):
+            for key in ("team1", "team2"):
+                if key not in supplied:
+                    values[key] = listed[key]
     # whatever the request did not give, the zone map may supply
     for key, value in zonal_player.current(mode=request.values.get("mode")).items():
         if key in values and not values[key] and value:
@@ -399,6 +409,13 @@ def say_category(category):
         # follow. analytics has its own file, zonal_player another.
         reader = analytics if category == "analytics" else zonal_player
         section = request.values.get("mode") or reader.mode() or "singles"
+    if (category in ("zonal_player", "analytics")
+            and not values.get("team1") and not values.get("team2")):
+        # every line names both sides; with no names from anywhere every phrase
+        # would be skipped. Speak with generic sides instead -- but only when
+        # both are blank, so a real name is never paired with "Player two".
+        side = "Team" if section == "doubles" else "Player"
+        values["team1"], values["team2"] = f"{side} one", f"{side} two"
     if section is None and category in SECTIONS:
         # named lines only when the caller asks for them. A live match still
         # fills the names, but it does not by itself switch the section --
