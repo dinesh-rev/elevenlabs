@@ -342,8 +342,8 @@ def say():
     print ("sayyyy")
 
     subprocess.run([
-        sys.executable,           # the interpreter running the server
-        str(BASE_DIR.parent / "json_copy" / "zonal_json_copy.py"),
+        "python3",
+        "/home/reveal/r_files/lab/elevenlabs/json_copy/zonal_json_copy.py",
     ], check=True)
     
     """Pick a phrase and speak it. Everything is a query parameter:
