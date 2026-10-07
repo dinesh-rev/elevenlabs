@@ -1,14 +1,40 @@
 {
+  "singles":{
+  "mode": "singles",
+  "players": {
+    "Stephen": {
+      "zones": {
+        "Forecourt Left": 6.841,
+        "Forecourt Right": 4.779,
+        "Midcourt Left": 35.155,
+        "Midcourt Right": 32.47,
+        "Rearcourt Left": 10.806,
+        "Rearcourt Right": 8.374
+      }
+    },
+    "Tan rui": {
+      "zones": {
+        "Forecourt Left": 4.364,
+        "Forecourt Right": 7.363,
+        "Midcourt Left": 38.998,
+        "Midcourt Right": 29.765,
+        "Rearcourt Left": 12.974,
+        "Rearcourt Right": 6.342
+      }
+    }
+  }
+},
+  "doubles": {
   "mode": "doubles",
   "teams": {
     "Player 1 & Player 2": {
       "zones": {
         "Forecourt Left": 13.273,
         "Forecourt Right": 7.42,
-        "Midcourt Left": 30.328,
-        "Midcourt Right": 40.666,
-        "Rearcourt Left": 7.098,
-        "Rearcourt Right": 4.104
+        "Midcourt Left": 36.521,
+        "Midcourt Right": 17.89,
+        "Rearcourt Left": 3.133,
+        "Rearcourt Right": 2.061
       }
     },
     "Player 3 & Player 4": {
@@ -17,9 +43,9 @@
         "Forecourt Right": 13.974,
         "Midcourt Left": 33.952,
         "Midcourt Right": 14.847,
-        "Rearcourt Left": 13.022,
-        "Rearcourt Right": 2.323
+        "Rearcourt Left": 5.349,
+        "Rearcourt Right": 2.238
       }
     }
   }
-}
+}}

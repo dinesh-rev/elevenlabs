@@ -33,6 +33,7 @@ import time
 import traceback
 from datetime import datetime
 import uuid
+import subprocess
 
 from flask import Flask, request, jsonify, send_file
 from werkzeug.exceptions import HTTPException
@@ -338,6 +339,13 @@ def pick_raw(category, section, values):
 
 @app.route("/say", methods=["GET", "POST"])
 def say():
+    print ("sayyyy")
+
+    subprocess.run([
+        "python3",
+        "/home/reveal/r_files/lab/elevenlabs/json_copy/json_copy.py"
+    ], check=True)
+    
     """Pick a phrase and speak it. Everything is a query parameter:
 
         /say?category=smash            which phrase file to pick from
