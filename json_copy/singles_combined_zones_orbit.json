@@ -1,0 +1,25 @@
+{
+  "mode": "singles",
+  "players": {
+    "Chairullah": {
+      "zones": {
+        "Forecourt Left": 6.64,
+        "Forecourt Right": 8.7,
+        "Midcourt Left": 30.328,
+        "Midcourt Right": 40.666,
+        "Rearcourt Left": 7.098,
+        "Rearcourt Right": 4.104
+      }
+    },
+    "Zhu": {
+      "zones": {
+        "Forecourt Left": 6.015,
+        "Forecourt Right": 8.282,
+        "Midcourt Left": 42.533,
+        "Midcourt Right": 26.101,
+        "Rearcourt Left": 13.022,
+        "Rearcourt Right": 2.323
+      }
+    }
+  }
+}
