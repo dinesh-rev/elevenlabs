@@ -2,9 +2,11 @@ import json
 import sys
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-DEFAULT_SOURCE = Path("/home/reveal/r_files/lab/elevenlabs/json_copy/singles_combined_zones_orbit.json")
-TARGET =  Path("/home/reveal/r_files/lab/elevenlabs/eleven/configs/zonal_player.json")
+# Relative to this file, so the script works wherever the project is checked
+# out rather than only on the machine the paths were written on.
+BASE_DIR = Path(__file__).resolve().parent
+DEFAULT_SOURCE = BASE_DIR / "singles_combined_zones_orbit.json"
+TARGET = BASE_DIR.parent / "eleven" / "configs" / "zonal_player.json"
 VALID_MODES = ("singles", "doubles")
 
 
