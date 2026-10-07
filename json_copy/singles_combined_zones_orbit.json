@@ -1,22 +1,22 @@
 {
-  "mode": "singles",
-  "players": {
-    "Chairullah": {
+  "mode": "doubles",
+  "teams": {
+    "Player 1 & Player 2": {
       "zones": {
-        "Forecourt Left": 6.64,
-        "Forecourt Right": 8.7,
+        "Forecourt Left": 13.273,
+        "Forecourt Right": 7.42,
         "Midcourt Left": 30.328,
         "Midcourt Right": 40.666,
         "Rearcourt Left": 7.098,
         "Rearcourt Right": 4.104
       }
     },
-    "Zhu": {
+    "Player 3 & Player 4": {
       "zones": {
-        "Forecourt Left": 6.015,
-        "Forecourt Right": 8.282,
-        "Midcourt Left": 42.533,
-        "Midcourt Right": 26.101,
+        "Forecourt Left": 11.245,
+        "Forecourt Right": 13.974,
+        "Midcourt Left": 33.952,
+        "Midcourt Right": 14.847,
         "Rearcourt Left": 13.022,
         "Rearcourt Right": 2.323
       }
