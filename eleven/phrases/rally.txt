@@ -1,34 +1,94 @@
 ## no-players
 
-# 1. Back and Forth
-[impressed] Pressure from both sides... [warm] neither gave in.
+# 1. Incredible Rally
+[excited] Unbelievable rally! [impressed] Neither side would give up!
 
-# 2. Making Each Other Work
-[chuckle] Plenty of court covered there... [impressed] tough point.
+# 2. Never Giving Up
+[surprised] How did they return that?! [excited] Incredible defence!
 
-# 3. Patient Exchange
-[focused] Both sides stayed patient... [impressed] waiting for the opening.
+# 3. Intense Battle
+[excited] What a battle! [emphasis] Both sides giving everything!
 
-# 4. Defence and Attack
-[excited] Attack became defence instantly... [chuckle] what a rally!
+# 4. Endless Rally
+[amazed] It just keeps going! [excited] Absolutely incredible!
 
-# 5. Refusing to Give Up
-[amused] That looked finished... [impressed] but it came back again.
+# 5. Brilliant Defence
+[surprised] That looked impossible! [excited] What a recovery!
 
-# 6. Physical Rally
-[focused] Plenty of court covered there... [softly] they'll need that breather.
+# 6. Powerful Exchange
+[excited] Attack after attack! [amazed] And everything comes back!
 
-# 7. Quick Change
-[surprised] One side had control... then the pressure switched.
+# 7. Crowd Goes Wild
+[excited] Oh, listen to that crowd! [emphasis] What a rally!
 
-# 8. Tactical
-[analytical] Neither side gave much away... [impressed] patient badminton.
+# 8. Unbelievable Recovery
+[shocked] No way! [excited] How on earth was that returned?!
 
-# 9. Fast Exchange
-[excited] Everything came back quickly... [emphasis] no time to reset.
+# 9. Fantastic Badminton
+[impressed] Oh, magnificent badminton! [excited] Absolutely breathtaking!
 
-# 10. Slightly Funny
-[chuckle] That point refused to end... [amused] back it came again.
+# 10. Relentless Pressure
+[intense] The pressure is relentless! [excited] Nobody is backing down!
+
+# 11. Dramatic Exchange
+[excited] What a sensational exchange! [amazed] Just extraordinary!
+
+# 12. Incredible Speed
+[surprised] Look at that speed! [excited] Absolutely lightning fast!
+
+# 13. Determination
+[impressed] What determination! [excited] Refusing to surrender!
+
+# 14. Edge of the Seat
+[tense] Still alive! Still fighting! [excited] What a point!
+
+# 15. Spectacular Defence
+[excited] Brilliant defence! [amazed] How did they survive that?!
+
+# 16. Pure Drama
+[shocked] Oh my goodness! [excited] This is unbelievable badminton!
+
+# 17. Fast Reactions
+[excited] Incredible reactions! [impressed] That was absolutely stunning!
+
+# 18. Total Commitment
+[intense] Every shot matters! [excited] They're giving absolutely everything!
+
+# 19. Rally Refuses to End
+[amazed] Surely that's the winner! [shocked] No, it's back again!
+
+# 20. Stunning Athleticism
+[excited] What incredible movement! [impressed] Absolutely phenomenal!
+
+# 21. Momentum Changes
+[surprised] Suddenly the tables turn! [excited] What a turnaround!
+
+# 22. Nerve-Wracking Rally
+[tense] Who's going to blink first?! [excited] Incredible tension!
+
+# 23. Fighting Spirit
+[impressed] What fighting spirit! [excited] Absolutely sensational!
+
+# 24. Stunning Exchange
+[excited] Oh, that's brilliant! [amazed] What an extraordinary rally!
+
+# 25. Impossible Save
+[shocked] That should be over! [excited] Somehow, they've saved it!
+
+# 26. Maximum Pressure
+[intense] The intensity is unbelievable! [excited] What a contest!
+
+# 27. Thrilling Badminton
+[excited] This is thrilling! [emphasis] Absolutely world-class badminton!
+
+# 28. Amazing Persistence
+[amazed] Nothing is getting through! [excited] Incredible resistance!
+
+# 29. Breathless Rally
+[breathless] Oh, what a rally! [excited] Simply sensational!
+
+# 30. Electrifying Finish
+[excited] What a point! [amazed] That was absolutely extraordinary!
 
 
 ## with-players

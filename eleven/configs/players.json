@@ -1,0 +1,80 @@
+{
+  "players": {
+    "team1": {
+      "1": "Player 1"
+    },
+    "team2": {
+      "1": "Player 2"
+    }
+  },
+  "match": {
+    "court": "1",
+    "court_name": "Court 1",
+    "match_id": "C1#2026-10-05#51f015a401",
+    "player1": "Player 1",
+    "player2": "Player 2",
+    "score1": 21,
+    "score2": 0,
+    "games1": 2,
+    "games2": 0,
+    "set_no": 2,
+    "status": "COMPLETED",
+    "completed": true,
+    "winner": "",
+    "confirmed": true,
+    "swapped": false,
+    "country1": "",
+    "country2": "",
+    "updated_at": "2026-10-05T10:49:57.758Z"
+  },
+  "raw": {
+    "tournamentId": "02006902-46b9-4e72-9719-34a6fa617e44",
+    "extMatchId": "C1#2026-10-05#51f015a401",
+    "courtNo": 1,
+    "court": "Court 1",
+    "t1_tabname": "PLAYER 1",
+    "t2_tabname": "PLAYER 2",
+    "sets": [
+      {
+        "completed": true,
+        "b": 0,
+        "setNo": 1,
+        "a": 21,
+        "winner": "A"
+      },
+      {
+        "setNo": 2,
+        "a": 21,
+        "completed": true,
+        "b": 0,
+        "winner": "A"
+      }
+    ],
+    "current": {
+      "b": 0,
+      "setNo": 2,
+      "a": 21
+    },
+    "currentSet": 2,
+    "gamesPerMatch": 3,
+    "pointsPerGame": 21,
+    "scoreA": 21,
+    "scoreB": 0,
+    "winsA": 2,
+    "winsB": 0,
+    "completed": true,
+    "winner": 1,
+    "status": "COMPLETED",
+    "swapped": false,
+    "nameState": "CONFIRMED",
+    "serve": null,
+    "rulesSource": "STATIC",
+    "completionSource": "RULES",
+    "updatedAt": "2026-10-05T10:49:57.758Z",
+    "linkState": "UNMAPPED",
+    "t1PlayerStates": null,
+    "t2PlayerStates": null,
+    "t1PlayerRefs": null,
+    "t2PlayerRefs": null
+  }
+}

@@ -341,10 +341,15 @@ def pick_raw(category, section, values):
 def say():
     print ("sayyyy")
 
-    subprocess.run([
-        sys.executable,           # the interpreter running the server
-        str(BASE_DIR.parent / "json_copy" / "zonal_json_copy.py"),
-    ], check=True)
+    try:
+        subprocess.run([
+            sys.executable,           # the interpreter running the server
+            str(BASE_DIR.parent / "json_copy" / "zonal_json_copy.py"),
+        ], check=True)
+    except Exception as e:
+        # refreshing the zone map is not worth losing the commentary for: the
+        # readers fall back to blanks, and every other category is unaffected
+        log.warning("zonal copy failed (%s: %s)", type(e).__name__, e)
     
     """Pick a phrase and speak it. Everything is a query parameter:
 
@@ -399,6 +404,18 @@ def say_category(category):
             for key in ("team1", "team2"):
                 if key not in supplied:
                     values[key] = listed[key]
+    # Naming one side of a result implies the other, so the pair cannot end up
+    # as the same person: values_for worked opponent out from the match before
+    # the override replaced winner.
+    if "winner" in supplied and "opponent" not in supplied:
+        values["opponent"] = (values["player2"]
+                              if values["winner"] == values["player1"]
+                              else values["player1"])
+    elif "opponent" in supplied and "winner" not in supplied:
+        values["winner"] = (values["player2"]
+                            if values["opponent"] == values["player1"]
+                            else values["player1"])
+
     # whatever the request did not give, the zone map may supply
     for key, value in zonal_player.current(mode=request.values.get("mode")).items():
         if key in values and not values[key] and value:

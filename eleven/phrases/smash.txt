@@ -1,64 +1,65 @@
 ## no-players
 
 # 1. Funny
-[chuckle] Whoa! That shuttle was in a hurry. [excited] What a smash!
+[chuckle] Whoa! That shuttle was flying! [excited] What a smash!
 
 # 2. Powerful
-[impressed] Huge smash! Clean contact, serious power, no chance to react.
+[excited] Oh, tremendous power! [impressed] What an absolutely thunderous smash!
 
 # 3. Quick Finish
-[surprised] Ooh! That ended quickly. [excited] One swing, and it was over!
+[surprised] Oh my goodness! [excited] One swing, and it's over!
 
 # 4. Smooth
-[impressed] Beautiful timing. [warm] Clean, controlled, and perfectly finished.
+[impressed] Beautiful timing! [warm] So effortless, and perfectly finished!
 
 # 5. Big Energy
-[excited] Ohhh! What a hit! [emphasis] Absolutely hammered down!
+[excited] OHHH! What a hit! [emphasis] Absolutely hammered down!
 
 # 6. Dry Funny
-[chuckle] I don't think the shuttle enjoyed that. [excited] Huge smash!
+[chuckle] That shuttle never stood a chance! [excited] Brilliant smash!
 
 # 7. Calm
-[focused] Great attack. [confident] Clean contact and a strong finish.
+[focused] Wonderful attacking shot! [impressed] Perfect timing and incredible control!
 
 # 8. Playful
-[surprised] Whoa! Where did that come from? [chuckle] Down in a hurry!
+[surprised] Whoa! Where did that come from?! [excited] Unbelievable smash!
 
 # 9. Nice Finish
-[warm] Lovely finish. [impressed] Clean, controlled, and right on time.
+[warm] Oh, beautifully done! [impressed] What a magnificent finishing smash!
 
 # 10. Replay
-[excited] We've got to see that again! [impressed] Brilliant smash!
+[excited] Oh, we've got to see that again! [amazed] Incredible smash!
 
 # 11. One Second Opening
-[excited] The opening appeared... [impressed] and the smash punished it instantly.
+[excited] One tiny opening! [emphasis] BANG! What a devastating smash!
 
 # 12. No Second Chance
-[surprised] That came down quickly! [excited] Clean contact and serious power.
+[surprised] Oh, lightning fast! [excited] Absolutely no chance of returning that!
 
 # 13. Patient Build-Up
-[impressed] Patient build-up... [emphasis] then the attack came and finished it.
+[impressed] Beautiful patience! [excited] And BANG! What a fantastic finish!
 
 # 14. No Hesitation
-[excited] There was the chance... bang! [impressed] No hesitation at all.
+[excited] There was the chance! [emphasis] BANG! Absolutely no hesitation!
 
 # 15. Changed Quickly
-[surprised] That changed quickly! [excited] One moment building, the next it was over.
+[surprised] Oh, that changed instantly! [excited] What an explosive finish!
 
 # 16. Pressure Told
-[focused] The pressure created the opening... [impressed] and the smash finished it.
+[intense] Relentless pressure! [excited] And what a thunderous finishing smash!
 
 # 17. Ended Rather Quickly
-[chuckle] Well, that ended quickly! [excited] One clean swing and done.
+[chuckle] Well, that ended quickly! [excited] What an incredible smash!
 
 # 18. Everything Lined Up
-[impressed] Everything lined up perfectly. [emphasis] Great timing and a sharp finish.
+[impressed] Perfect timing, perfect contact! [excited] What a spectacular finish!
 
 # 19. Sat Up Just Enough
-[excited] The shuttle sat up... [surprised] and that was all the invitation needed.
+[excited] The shuttle sat up! [emphasis] BANG! Absolutely smashed away!
 
 # 20. Nicely Worked
-[warm] Nicely worked. [impressed] Wait for the opening, then finish with power.
+[warm] Beautifully constructed! [excited] And finished with a devastating smash!
+
 
 
 ## with-players

@@ -52,7 +52,7 @@ def pick_mode(data, mode=None):
         return {}                   # a list, a number: not a court map
     if "mode" in data:
         return data
-    block = data.get(mode or "singles")
+    block = data.get(mode or sole_mode(data) or "singles")
     return block if isinstance(block, dict) else {}
 
 
@@ -69,12 +69,26 @@ def extremes(zones):
             "low_zone": low.lower(), "low_percent": str(round(usable[low]))}
 
 
+def sole_mode(data):
+    """The only mode block in a file, or "" when it holds both or neither.
+
+    A copy of a single-section source writes just that block -- {"doubles":
+    {...}} with no top-level "mode" -- so the one key present is what the file
+    measured. Writing "mode" into the target instead would go stale the moment
+    the other mode were copied alongside it.
+    """
+    if not isinstance(data, dict):
+        return ""
+    present = [m for m in SIDES if isinstance(data.get(m), dict)]
+    return present[0] if len(present) == 1 else ""
+
+
 def mode(path=None):
     """"singles", "doubles", or "" if the file does not say."""
     data = load(path)
     if isinstance(data, dict) and data.get("mode") in SIDES:
         return data["mode"]
-    return ""
+    return sole_mode(data)
 
 
 def pair(sides, mode):

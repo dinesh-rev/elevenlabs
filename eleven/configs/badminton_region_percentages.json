@@ -1,0 +1,48 @@
+{
+  "singles": {
+    "match_id": "6",
+    "mode": "singles",
+    "teams": {
+      "team_near": {
+        "players": [
+          "Ghaza"
+        ],
+        "zones": {
+          "Rigth_Service_Court": 14.3
+        }
+      },
+      "team_far": {
+        "players": [
+          "Ron"
+        ],
+        "zones": {
+          "Front": 4.3
+        }
+      }
+    }
+  },
+  "doubles": {
+    "match_id": "6",
+    "mode": "doubles",
+    "teams": {
+      "team_near": {
+        "players": [
+          "Saj",
+          "Ghaza"
+        ],
+        "zones": {
+          "Rigth_Service_Court": 14.3
+        }
+      },
+      "team_far": {
+        "players": [
+          "Anna",
+          "Ron"
+        ],
+        "zones": {
+          "Front": 4.3
+        }
+      }
+    }
+  }
+}

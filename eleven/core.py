@@ -165,9 +165,11 @@ def values_for(s):
         winner = s["winner"]
         opponent = s["player2"] if winner == s["player1"] else s["player1"]
     else:
-        ahead = (s["games1"], s["score1"]) >= (s["games2"], s["score2"])
-        winner = s["player1"] if ahead else s["player2"]
-        opponent = s["player2"] if ahead else s["player1"]
+        # Mid-match. Whoever leads is not the winner, and saying so on air
+        # would be wrong the moment the score turns, so nothing is offered:
+        # the winners phrases stay unfillable until the feed declares a
+        # result, or the caller names one with ?winner=.
+        winner = opponent = ""
     return {
         # whoever won the most recent point. The feed never says who played
         # the shot, so this is the closest it can get.

@@ -4,7 +4,6 @@ __pycache__/
 *.mp3.part
 
 # generated audio and captured feed logs
-eleven/configs/
 eleven/logs/
 eleven/test_api.sh
 eleven/.venv/
