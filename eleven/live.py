@@ -26,7 +26,7 @@ from datetime import datetime
 from pathlib import Path
 
 WS_URL = "wss://5a7amc2f17.execute-api.ap-south-1.amazonaws.com/prod"
-TOURNAMENT_KEY = "131"
+TOURNAMENT_KEY = "377"
 
 BASE_DIR = Path(__file__).resolve().parent
 LOG_DIR = BASE_DIR / "logs"

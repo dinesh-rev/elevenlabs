@@ -341,15 +341,10 @@ def pick_raw(category, section, values):
 def say():
     print ("sayyyy")
 
-    try:
-        subprocess.run([
-            sys.executable,           # the interpreter running the server
-            str(BASE_DIR.parent / "json_copy" / "zonal_json_copy.py"),
-        ], check=True)
-    except Exception as e:
-        # refreshing the zone map is not worth losing the commentary for: the
-        # readers fall back to blanks, and every other category is unaffected
-        log.warning("zonal copy failed (%s: %s)", type(e).__name__, e)
+    subprocess.run([
+        sys.executable,           # the interpreter running the server
+        str(BASE_DIR.parent / "json_copy" / "zonal_json_copy.py"),
+    ], check=True)
     
     """Pick a phrase and speak it. Everything is a query parameter:
 
