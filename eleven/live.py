@@ -105,7 +105,10 @@ def read_frame(frame):
     # the feed says whether it has settled on the names; anything else is a
     # reading still in flux and must not be spoken
     confirmed = m.get("nameState") == "CONFIRMED"
-    side = m.get("winner")                # "A", "B" or null
+    # The feed marks the winning side as a number at match level (1 or 2),
+    # while the per-set blocks use the letters A and B. Both are accepted so
+    # the name is found whichever form arrives.
+    side = str(m.get("winner") or "").upper()      # "1"/"2", or "A"/"B"
     return {
         "court": str(m.get("courtNo", "")),
         "court_name": str(m.get("court", "")),
@@ -121,7 +124,7 @@ def read_frame(frame):
         "set_no": int(m.get("currentSet") or 0),
         "status": str(m.get("status") or ""),
         "completed": bool(m.get("completed")),
-        "winner": p1 if side == "A" else p2 if side == "B" else "",
+        "winner": p1 if side in ("A", "1") else p2 if side in ("B", "2") else "",
         "confirmed": confirmed,
         "live": True,
         "updated_at": str(m.get("updatedAt") or ""),

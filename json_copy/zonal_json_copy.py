@@ -3,11 +3,19 @@ import os
 import sys
 from pathlib import Path
 
-# Relative to this file, so the script works wherever the project is checked
-# out rather than only on the machine the paths were written on.
 BASE_DIR = Path(__file__).resolve().parent
-DEFAULT_SOURCE = Path("/home/reveal/ndi-feed/configs/media/analytics/doubles_combined_zones_orbit.json")
-TARGET = Path("/home/reveal/r_files/lab/elevenlabs/eleven/configs/zonal_player.json")
+
+# The analytics machine writes the live file; where that is not mounted (a
+# laptop, a fresh clone) the copy falls back to the sample kept beside this
+# script, so the script runs everywhere instead of only on one machine.
+FEED_SOURCE = Path("/home/reveal/ndi-feed/configs/media/analytics/doubles_combined_zones_orbit.json")
+LOCAL_SOURCE = BASE_DIR / "singles_combined_zones_orbit.json"
+DEFAULT_SOURCE = FEED_SOURCE if FEED_SOURCE.exists() else LOCAL_SOURCE
+
+# Relative to this file, so the copy always lands in the checkout the script
+# belongs to and the server reads back what was just written. On the analytics
+# machine this resolves to the same absolute path as before.
+TARGET = BASE_DIR.parent / "eleven" / "configs" / "zonal_player.json"
 VALID_MODES = ("singles", "doubles")
 
 

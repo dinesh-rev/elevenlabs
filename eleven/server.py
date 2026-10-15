@@ -341,10 +341,16 @@ def pick_raw(category, section, values):
 def say():
     print ("sayyyy")
 
-    subprocess.run([
-        sys.executable,           # the interpreter running the server
-        str(BASE_DIR.parent / "json_copy" / "zonal_json_copy.py"),
-    ], check=True)
+    # Refreshing the zonal data is best-effort: if the copy script is missing
+    # its source, or fails for any other reason, that is no reason to fail the
+    # whole request, so the failure is logged and the phrase is still spoken.
+    try:
+        subprocess.run([
+            sys.executable,       # the interpreter running the server
+            str(BASE_DIR.parent / "json_copy" / "zonal_json_copy.py"),
+        ], check=True)
+    except Exception as e:
+        log.warning("zonal copy failed (%s: %s)", type(e).__name__, e)
     
     """Pick a phrase and speak it. Everything is a query parameter:
 
